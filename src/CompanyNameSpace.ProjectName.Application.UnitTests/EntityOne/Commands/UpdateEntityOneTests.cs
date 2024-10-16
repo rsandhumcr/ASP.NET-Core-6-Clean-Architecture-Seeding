@@ -61,7 +61,7 @@ namespace CompanyNameSpace.ProjectName.Application.UnitTests.EntityOne.Commands
             //Act
             var response = await Assert.ThrowsAsync<ValidationException>(() => sut.Handle(command, CancellationToken.None));
             //Assert
-            response.ValidationErrors.Count.ShouldBe(1);
+            CheckValidationExceptionCount(response, 1);
             CheckValidationException(response, 0, "Name is required.");
         }
 
@@ -75,7 +75,7 @@ namespace CompanyNameSpace.ProjectName.Application.UnitTests.EntityOne.Commands
             //Act
             var response = await Assert.ThrowsAsync<ValidationException>(() => sut.Handle(command, CancellationToken.None));
             //Assert
-            response.ValidationErrors.Count.ShouldBe(2);
+            CheckValidationExceptionCount(response, 2);
             CheckValidationException(response, 0, "Price is required.");
             CheckValidationException(response, 1, "'Price' must be greater than '0'.");
 

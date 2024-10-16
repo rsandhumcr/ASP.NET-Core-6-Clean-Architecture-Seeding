@@ -29,6 +29,7 @@ namespace CompanyNameSpace.ProjectName.Api.Controllers
         }
 
         [HttpGet("{id}", Name = "GetEntityOneById")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<EntityOneDetailVm>> GetEntityOneById(int id)
         {
             var getEntityOneDetailQuery = new GetEntityOneDetailQuery() { Id = id };
