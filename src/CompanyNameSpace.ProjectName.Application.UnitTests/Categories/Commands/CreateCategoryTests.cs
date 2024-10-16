@@ -29,10 +29,11 @@ namespace CompanyNameSpace.ProjectName.Application.UnitTests.Categories.Commands
         [Fact]
         public async Task Handle_ValidCategory_AddedToCategoriesRepo()
         {
+            //Arrange
             var handler = new CreateCategoryCommandHandler(_mapper, _mockCategoryRepository.Object);
-
+            //Act
             await handler.Handle(new CreateCategoryCommand() { Name = "Test" }, CancellationToken.None);
-
+            //Assert
             var allCategories = await _mockCategoryRepository.Object.ListAllAsync();
             allCategories.Count.ShouldBe(5);
         }

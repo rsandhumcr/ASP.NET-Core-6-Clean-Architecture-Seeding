@@ -61,9 +61,14 @@ namespace CompanyNameSpace.ProjectName.Api.Middleware
             {
                 bool isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
                 if (isDevelopment)
+                {
+                    GeneralUtils.DebugWriteLineException(exception);
                     result = JsonSerializer.Serialize(new { error = GeneralUtils.FormatException(exception) });
+                }
                 else
+                {
                     result = JsonSerializer.Serialize(new { error = exception.Message });
+                }
             }
 
             return context.Response.WriteAsync(result);
