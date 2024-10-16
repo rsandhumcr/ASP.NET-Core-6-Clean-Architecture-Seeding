@@ -12,7 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 var testModeConfigValue = builder.Configuration.GetValue<string>("IntegrationTestMode");
 var isInTest = testModeConfigValue.Equals("true");
 
-
 builder.Host.UseSerilog((context, loggerConfiguration) => loggerConfiguration
     .WriteTo.Console()
     .ReadFrom.Configuration(context.Configuration), isInTest);

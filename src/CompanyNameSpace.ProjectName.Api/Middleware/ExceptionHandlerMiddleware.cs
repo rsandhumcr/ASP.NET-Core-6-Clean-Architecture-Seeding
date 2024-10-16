@@ -1,9 +1,6 @@
-﻿using Microsoft.Extensions.Primitives;
-using System.Net;
-using System.Text;
+﻿using System.Net;
 using System.Text.Json;
 using CompanyNameSpace.ProjectName.Application.Exceptions;
-using CompanyNameSpace.ProjectName.Api.Utility;
 using CompanyNameSpace.ProjectName.Application.Utils;
 
 namespace CompanyNameSpace.ProjectName.Api.Middleware
