@@ -9,7 +9,9 @@ Log.Information("ProjectName API starting");
 
 var builder = WebApplication.CreateBuilder(args);
 
-var isInTest = false;
+var testModeConfigValue = builder.Configuration.GetValue<string>("IntegrationTestMode");
+var isInTest = testModeConfigValue.Equals("true");
+
 
 builder.Host.UseSerilog((context, loggerConfiguration) => loggerConfiguration
     .WriteTo.Console()
@@ -32,3 +34,4 @@ await app.InitialIdentityDatabaseAsync();
 app.Run();
 
 public partial class Program { }
+
