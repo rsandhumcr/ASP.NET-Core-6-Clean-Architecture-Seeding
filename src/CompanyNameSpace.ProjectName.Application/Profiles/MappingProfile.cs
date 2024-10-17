@@ -5,6 +5,7 @@ using CompanyNameSpace.ProjectName.Application.Features.Categories.Queries.GetCa
 using CompanyNameSpace.ProjectName.Application.Features.EntityOne.Commands.CreateEntityOne;
 using CompanyNameSpace.ProjectName.Application.Features.EntityOne.Commands.UpdateEntityOne;
 using CompanyNameSpace.ProjectName.Application.Features.EntityOne.Queries.GetEntityOneDetail;
+using CompanyNameSpace.ProjectName.Application.Features.EntityOne.Queries.GetEntityOneList;
 using CompanyNameSpace.ProjectName.Application.Features.Events.Commands.CreateEvent;
 using CompanyNameSpace.ProjectName.Application.Features.Events.Commands.UpdateEvent;
 using CompanyNameSpace.ProjectName.Application.Features.Events.Queries.GetEventDetail;
@@ -38,6 +39,7 @@ namespace CompanyNameSpace.ProjectName.Application.Profiles
             CreateMap<EntityOne, EntityOneListVm>().ReverseMap();
             CreateMap<EntityOne, CreateEntityOneCommand>().ReverseMap();
             CreateMap<EntityOne, UpdateEntityOneCommand>().ReverseMap();
+            CreateMap<EntityOne, EntityOneDto>();
 
         }
     }

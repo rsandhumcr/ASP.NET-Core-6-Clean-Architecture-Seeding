@@ -49,7 +49,7 @@ namespace CompanyNameSpace.ProjectName.Application.UnitTests.Mocks
 
             return mockCategoryRepository;
         }
-        public static Mock<IAsyncRepository<Domain.Entities.EntityOne>> GetEntityOneRepository()
+        public static Mock<IEntityOneRepository> GetEntityOneRepository()
         {
             var entitiesOne = new List<Domain.Entities.EntityOne>
             {
@@ -70,10 +70,16 @@ namespace CompanyNameSpace.ProjectName.Application.UnitTests.Mocks
                 },
             };
 
-            var mockEntityOneRepository = new Mock<IAsyncRepository<Domain.Entities.EntityOne>>();
+            var mockEntityOneRepository = new Mock<IEntityOneRepository>();
 
             mockEntityOneRepository.Setup(repo =>
-                repo.ListAllAsync()).ReturnsAsync(entitiesOne);
+                repo.GetPagedEntityOneList(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(
+                    (int page, int size) =>
+                    {
+                        
+                        return entitiesOne.Skip((page - 1) * size).Take(size).ToList();
+                    }
+            );
 
             mockEntityOneRepository.Setup(repo =>
                 repo.AddAsync(It.IsAny<Domain.Entities.EntityOne>())).ReturnsAsync(

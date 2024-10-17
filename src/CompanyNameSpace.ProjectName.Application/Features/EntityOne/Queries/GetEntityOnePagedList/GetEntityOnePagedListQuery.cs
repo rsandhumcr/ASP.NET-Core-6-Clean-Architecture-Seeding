@@ -4,7 +4,9 @@ using CompanyNameSpace.ProjectName.Application.Features.EntityOne.Queries.GetEnt
 
 namespace CompanyNameSpace.ProjectName.Application.Features.EntityOne.Queries.GetEntityOneList
 {
-    public class GetEntityOneListQuery: IRequest<List<EntityOneListVm>>
+    public class GetEntityOnePagedListQuery: IRequest<EntityOneListVm>
     {
+        public int Page { get; set; }
+        public int Size { get; set; }
     }
 }

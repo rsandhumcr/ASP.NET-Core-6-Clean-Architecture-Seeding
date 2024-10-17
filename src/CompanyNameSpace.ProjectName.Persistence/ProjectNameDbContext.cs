@@ -200,7 +200,53 @@ namespace CompanyNameSpace.ProjectName.Persistence
                 Description = "First Item",
                 TypeId = 1
             });
-            
+
+
+            modelBuilder.Entity<EntityOne>().HasData(new EntityOne
+            {
+                EntityOneId = 2,
+                Name = "Two",
+                Price = 1.24M,
+                Description = "Second Item",
+                TypeId = 2
+            });
+
+            modelBuilder.Entity<EntityOne>().HasData(new EntityOne
+            {
+                EntityOneId = 3,
+                Name = "Three",
+                Price = 1.25M,
+                Description = "Third Item",
+                TypeId = 2
+            });
+
+            modelBuilder.Entity<EntityOne>().HasData(new EntityOne
+            {
+                EntityOneId = 4,
+                Name = "Four",
+                Price = 1.26M,
+                Description = "Fourth Item",
+                TypeId = 4
+            });
+
+            modelBuilder.Entity<EntityOne>().HasData(new EntityOne
+            {
+                EntityOneId = 5,
+                Name = "Five",
+                Price = 1.27M,
+                Description = "Fifth Item",
+                TypeId = 4
+            });
+
+            modelBuilder.Entity<EntityOne>().HasData(new EntityOne
+            {
+                EntityOneId = 6,
+                Name = "Six",
+                Price = 1.28M,
+                Description = "Sixth Item",
+                TypeId = 4
+            });
+
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

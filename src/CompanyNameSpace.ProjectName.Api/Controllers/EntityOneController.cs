@@ -19,12 +19,13 @@ namespace CompanyNameSpace.ProjectName.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet(Name = "GetAllEntityOnes")]
+        [HttpGet("/GetPagedEntityOnes", Name = "GetPagedEntityOnes")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<List<EntityOneListVm>>> GetAllEntityOnes()
+        public async Task<ActionResult<EntityOneListVm>> GetPagedEntityOnes(int page, int size)
         {
-            var dtos = await _mediator.Send(new GetEntityOneListQuery());
+            var command = new GetEntityOnePagedListQuery { Page = page, Size = size};
+            var dtos = await _mediator.Send(command);
             return Ok(dtos);
         }
 

@@ -1,6 +1,6 @@
-﻿namespace CompanyNameSpace.ProjectName.Application.Features.EntityOne.Queries.GetEntityOneDetail
+﻿namespace CompanyNameSpace.ProjectName.Application.Features.EntityOne.Queries.GetEntityOneList
 {
-    public class EntityOneListVm
+    public class EntityOneDto
     {
         public int EntityOneId { get; set; }
         public int TypeId { get; set; }

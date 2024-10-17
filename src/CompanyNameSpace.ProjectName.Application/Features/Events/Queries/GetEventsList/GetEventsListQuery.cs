@@ -4,5 +4,7 @@ namespace CompanyNameSpace.ProjectName.Application.Features.Events.Queries.GetEv
 {
     public class GetEventsListQuery: IRequest<List<EventListVm>>
     {
+        public int Page { get; set; }
+        public int Size { get; set; }
     }
 }

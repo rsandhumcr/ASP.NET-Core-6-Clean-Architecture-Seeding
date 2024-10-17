@@ -18,6 +18,7 @@ namespace CompanyNameSpace.ProjectName.Persistence
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IEntityOneRepository, EntityOneRepository>();
 
             return services;    
         }
