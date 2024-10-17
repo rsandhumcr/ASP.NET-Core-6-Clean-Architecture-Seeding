@@ -16,6 +16,7 @@ public class GetEntityOneDetailTests : CommandQueryEntityOneTestBase
         //Act
         var entityOne = await sut.Handle(command, CancellationToken.None);
         //Assert
+        entityOne.EntityOneId.ShouldBe(2);
         entityOne.Name.ShouldBe("Entity Two");
         entityOne.Description.ShouldBe("The second entity.");
         entityOne.Price.ShouldBe(1.22M);
