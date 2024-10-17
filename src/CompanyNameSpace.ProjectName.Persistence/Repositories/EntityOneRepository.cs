@@ -10,9 +10,10 @@ public class EntityOneRepository : BaseRepository<EntityOne>, IEntityOneReposito
     {
     }
 
-    public async Task<List<EntityOne>> GetPagedEntityOneList(int page, int size)
+    public async Task<IReadOnlyList<EntityOne>> GetPagedEntityOneList(int page, int size)
     {
         return await DbContext.EntityOnes
-            .Skip((page - 1) * size).Take(size).AsNoTracking().ToListAsync();
+            .Skip((page - 1) * size).Take(size)
+            .OrderBy(itm => itm.EntityOneId).ToListAsync();
     }
 }
