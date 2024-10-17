@@ -12,7 +12,7 @@ namespace CompanyNameSpace.ProjectName.Persistence.Repositories
 
         public async Task<List<EntityOne>> GetPagedEntityOneList(int page, int size)
         {
-            return await DbContext.EntityOne
+            return await DbContext.EntityOnes
                 .Skip((page - 1) * size).Take(size).AsNoTracking().ToListAsync();
         }
     }

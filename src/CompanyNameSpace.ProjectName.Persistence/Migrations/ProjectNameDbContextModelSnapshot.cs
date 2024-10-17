@@ -113,7 +113,7 @@ namespace CompanyNameSpace.ProjectName.Persistence.Migrations
 
                     b.HasKey("EntityOneId");
 
-                    b.ToTable("EntityOne");
+                    b.ToTable("EntityOnes");
 
                     b.HasData(
                         new
@@ -227,7 +227,7 @@ namespace CompanyNameSpace.ProjectName.Persistence.Migrations
                             Artist = "Taylor Swift",
                             CategoryId = new Guid("b0788d2f-8003-43c1-92a4-edc76a7c5dde"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Date = new DateTime(2025, 4, 17, 3, 8, 49, 152, DateTimeKind.Local).AddTicks(5739),
+                            Date = new DateTime(2025, 4, 17, 5, 33, 48, 979, DateTimeKind.Local).AddTicks(475),
                             Description = "The Eras Tour is the ongoing sixth concert tour by the American singer-songwriter Taylor Swift. It commenced on March 17, 2023, in Glendale, Arizona, and is set to conclude on December 8, 2024, in Vancouver, consisting of 149 shows that span five continents.",
                             ImageUrl = "https://somewhere.org/images/TaylorSwift.jpg",
                             Name = "The Eras Tour",
@@ -239,7 +239,7 @@ namespace CompanyNameSpace.ProjectName.Persistence.Migrations
                             Artist = "Chappell Roan",
                             CategoryId = new Guid("b0788d2f-8003-43c1-92a4-edc76a7c5dde"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Date = new DateTime(2025, 7, 17, 3, 8, 49, 152, DateTimeKind.Local).AddTicks(5798),
+                            Date = new DateTime(2025, 7, 17, 5, 33, 48, 979, DateTimeKind.Local).AddTicks(541),
                             Description = "Kayleigh Rose Amstutz, known professionally as Chappell Roan, is an American singer and songwriter. Working with collaborator Dan Nigro, the majority of her music is inspired by 1980s synth-pop and early 2000s pop hits.",
                             ImageUrl = "https://somewhere.org/images/chappellroan.jpg",
                             Name = "Chappell Roan Night",
@@ -251,7 +251,7 @@ namespace CompanyNameSpace.ProjectName.Persistence.Migrations
                             Artist = "Daft Punk",
                             CategoryId = new Guid("b0788d2f-8003-43c1-92a4-edc76a7c5dde"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Date = new DateTime(2025, 2, 17, 3, 8, 49, 152, DateTimeKind.Local).AddTicks(5813),
+                            Date = new DateTime(2025, 2, 17, 5, 33, 48, 979, DateTimeKind.Local).AddTicks(577),
                             Description = "Daft Punk were a French electronic music duo formed in 1993 in Paris by Thomas Bangalter and Guy-Manuel de Homem-Christo. ",
                             ImageUrl = "https://somewhere.org/images/dj.jpg",
                             Name = "Clash of the Punks",
@@ -263,7 +263,7 @@ namespace CompanyNameSpace.ProjectName.Persistence.Migrations
                             Artist = "Beyonce",
                             CategoryId = new Guid("b0788d2f-8003-43c1-92a4-edc76a7c5dde"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Date = new DateTime(2025, 2, 17, 3, 8, 49, 152, DateTimeKind.Local).AddTicks(5827),
+                            Date = new DateTime(2025, 2, 17, 5, 33, 48, 979, DateTimeKind.Local).AddTicks(590),
                             Description = "Beyoncé Giselle Knowles-Carter is an American singer, songwriter, and businesswoman. Nicknamed 'Queen Bey', she is regarded as an influential cultural figure of the 21st century.",
                             ImageUrl = "https://somewhere.org/images/Beyonce.jpg",
                             Name = "The Beyonce Tour",
@@ -275,7 +275,7 @@ namespace CompanyNameSpace.ProjectName.Persistence.Migrations
                             Artist = "Pink Floyd",
                             CategoryId = new Guid("fe98f549-e790-4e9f-aa16-18c2292a2ee9"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Date = new DateTime(2025, 8, 17, 3, 8, 49, 152, DateTimeKind.Local).AddTicks(5842),
+                            Date = new DateTime(2025, 8, 17, 5, 33, 48, 979, DateTimeKind.Local).AddTicks(608),
                             Description = "Pink Floyd earliest shows were performed in 1965. They included Bob Klose as a member of the band, which at first played mainly RnB covers. Klose left the band after 1965.",
                             ImageUrl = "https://somewhere.org/images/conf.jpg",
                             Name = "The Dark Side of the Moon",
@@ -287,7 +287,7 @@ namespace CompanyNameSpace.ProjectName.Persistence.Migrations
                             Artist = "The Rolling Stones",
                             CategoryId = new Guid("6313179f-7837-473a-a4d5-a5571b43e6a6"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Date = new DateTime(2025, 6, 17, 3, 8, 49, 152, DateTimeKind.Local).AddTicks(5859),
+                            Date = new DateTime(2025, 6, 17, 5, 33, 48, 979, DateTimeKind.Local).AddTicks(623),
                             Description = "Since forming in 1962, the English rock band the Rolling Stones have performed more than two thousand concerts around the world, becoming one of the world's most popular live music attractions in the process.",
                             ImageUrl = "https://somewhere.org/images/RollingStones.jpg",
                             Name = "Licks Tour",
@@ -336,7 +336,7 @@ namespace CompanyNameSpace.ProjectName.Persistence.Migrations
                             OrderId = new Guid("7e94bc5b-71a5-4c8c-bc3b-71bb7976237e"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             OrderPaid = true,
-                            OrderPlaced = new DateTime(2024, 10, 17, 3, 8, 49, 152, DateTimeKind.Local).AddTicks(5875),
+                            OrderPlaced = new DateTime(2024, 10, 17, 5, 33, 48, 979, DateTimeKind.Local).AddTicks(637),
                             OrderTotal = 400,
                             UserId = new Guid("a441eb40-9636-4ee6-be49-a66c5ec1330b")
                         },
@@ -345,7 +345,7 @@ namespace CompanyNameSpace.ProjectName.Persistence.Migrations
                             OrderId = new Guid("86d3a045-b42d-4854-8150-d6a374948b6e"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             OrderPaid = true,
-                            OrderPlaced = new DateTime(2024, 10, 17, 3, 8, 49, 152, DateTimeKind.Local).AddTicks(5891),
+                            OrderPlaced = new DateTime(2024, 10, 17, 5, 33, 48, 979, DateTimeKind.Local).AddTicks(652),
                             OrderTotal = 135,
                             UserId = new Guid("ac3cfaf5-34fd-4e4d-bc04-ad1083ddc340")
                         },
@@ -354,7 +354,7 @@ namespace CompanyNameSpace.ProjectName.Persistence.Migrations
                             OrderId = new Guid("771cca4b-066c-4ac7-b3df-4d12837fe7e0"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             OrderPaid = true,
-                            OrderPlaced = new DateTime(2024, 10, 17, 3, 8, 49, 152, DateTimeKind.Local).AddTicks(5902),
+                            OrderPlaced = new DateTime(2024, 10, 17, 5, 33, 48, 979, DateTimeKind.Local).AddTicks(664),
                             OrderTotal = 85,
                             UserId = new Guid("d97a15fc-0d32-41c6-9ddf-62f0735c4c1c")
                         },
@@ -363,7 +363,7 @@ namespace CompanyNameSpace.ProjectName.Persistence.Migrations
                             OrderId = new Guid("3dcb3ea0-80b1-4781-b5c0-4d85c41e55a6"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             OrderPaid = true,
-                            OrderPlaced = new DateTime(2024, 10, 17, 3, 8, 49, 152, DateTimeKind.Local).AddTicks(5914),
+                            OrderPlaced = new DateTime(2024, 10, 17, 5, 33, 48, 979, DateTimeKind.Local).AddTicks(676),
                             OrderTotal = 245,
                             UserId = new Guid("4ad901be-f447-46dd-bcf7-dbe401afa203")
                         },
@@ -372,7 +372,7 @@ namespace CompanyNameSpace.ProjectName.Persistence.Migrations
                             OrderId = new Guid("e6a2679c-79a3-4ef1-a478-6f4c91b405b6"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             OrderPaid = true,
-                            OrderPlaced = new DateTime(2024, 10, 17, 3, 8, 49, 152, DateTimeKind.Local).AddTicks(5925),
+                            OrderPlaced = new DateTime(2024, 10, 17, 5, 33, 48, 979, DateTimeKind.Local).AddTicks(691),
                             OrderTotal = 142,
                             UserId = new Guid("7aeb2c01-fe8e-4b84-a5ba-330bdf950f5c")
                         },
@@ -381,7 +381,7 @@ namespace CompanyNameSpace.ProjectName.Persistence.Migrations
                             OrderId = new Guid("f5a6a3a0-4227-4973-abb5-a63fbe725923"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             OrderPaid = true,
-                            OrderPlaced = new DateTime(2024, 10, 17, 3, 8, 49, 152, DateTimeKind.Local).AddTicks(5937),
+                            OrderPlaced = new DateTime(2024, 10, 17, 5, 33, 48, 979, DateTimeKind.Local).AddTicks(705),
                             OrderTotal = 40,
                             UserId = new Guid("f5a6a3a0-4227-4973-abb5-a63fbe725923")
                         },
@@ -390,7 +390,7 @@ namespace CompanyNameSpace.ProjectName.Persistence.Migrations
                             OrderId = new Guid("ba0eb0ef-b69b-46fd-b8e2-41b4178ae7cb"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             OrderPaid = true,
-                            OrderPlaced = new DateTime(2024, 10, 17, 3, 8, 49, 152, DateTimeKind.Local).AddTicks(5949),
+                            OrderPlaced = new DateTime(2024, 10, 17, 5, 33, 48, 979, DateTimeKind.Local).AddTicks(717),
                             OrderTotal = 116,
                             UserId = new Guid("7aeb2c01-fe8e-4b84-a5ba-330bdf950f5c")
                         });

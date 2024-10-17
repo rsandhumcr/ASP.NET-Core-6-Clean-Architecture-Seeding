@@ -1,7 +1,8 @@
-﻿using CompanyNameSpace.ProjectName.Application.UnitTests.Shared;
+﻿using Shouldly;
+using CompanyNameSpace.ProjectName.Application.UnitTests.Shared;
 using CompanyNameSpace.ProjectName.Application.Features.EntityOne.Queries.GetEntityOneDetail;
 using CompanyNameSpace.ProjectName.Application.Features.EntityOne.Queries.GetEntityOneList;
-using Shouldly;
+
 
 namespace CompanyNameSpace.ProjectName.Application.UnitTests.EntityOne.Queries
 {
@@ -30,9 +31,9 @@ namespace CompanyNameSpace.ProjectName.Application.UnitTests.EntityOne.Queries
             //Act
             var entityOnePaged = await sut.Handle(command, CancellationToken.None);
             //Assert
-            CheckPagedEntityOneListVm(entityOnePaged, 0, "Entity One", "The first entity.", 1.21M, 1);
-            CheckPagedEntityOneListVm(entityOnePaged, 1, "Entity Two", "The second entity.", 1.22M, 2);
-            CheckPagedEntityOneListVm(entityOnePaged, 2, "Entity Three", "The third entity.", 1.23M, 3);
+            CheckPagedEntityOneListVm(entityOnePaged, 0, 1,"Entity One", "The first entity.", 1.21M, 1);
+            CheckPagedEntityOneListVm(entityOnePaged, 1, 2, "Entity Two", "The second entity.", 1.22M, 2);
+            CheckPagedEntityOneListVm(entityOnePaged, 2, 3, "Entity Three", "The third entity.", 1.23M, 3);
         }
 
         [Fact]
@@ -47,7 +48,7 @@ namespace CompanyNameSpace.ProjectName.Application.UnitTests.EntityOne.Queries
             entityOnePaged.EntityOnes.Count.ShouldBe(1);
             entityOnePaged.Page.ShouldBe(1);
             entityOnePaged.Size.ShouldBe(1);
-            CheckPagedEntityOneListVm(entityOnePaged, 0, "Entity One", "The first entity.", 1.21M, 1);
+            CheckPagedEntityOneListVm(entityOnePaged, 0, 1, "Entity One", "The first entity.", 1.21M, 1);
         }
 
         [Fact]
@@ -62,14 +63,15 @@ namespace CompanyNameSpace.ProjectName.Application.UnitTests.EntityOne.Queries
             entityOnePaged.EntityOnes.Count.ShouldBe(1);
             entityOnePaged.Page.ShouldBe(2);
             entityOnePaged.Size.ShouldBe(1);
-            CheckPagedEntityOneListVm(entityOnePaged, 0, "Entity Two", "The second entity.", 1.22M, 2);
+            CheckPagedEntityOneListVm(entityOnePaged, 0, 2, "Entity Two", "The second entity.", 1.22M, 2);
         }
 
 
-        private void CheckPagedEntityOneListVm(EntityOneListVm entities, int index, string name, string description, 
+        private void CheckPagedEntityOneListVm(EntityOneListVm entities, int index, int id, string name, string description, 
             decimal price, int typeId)
         {
             var entity = entities.EntityOnes.ToList()[index];
+            entity.EntityOneId.ShouldBe(id);
             entity.Name.ShouldBe(name);
             entity.Description.ShouldBe(description);
             entity.Price.ShouldBe(price);
