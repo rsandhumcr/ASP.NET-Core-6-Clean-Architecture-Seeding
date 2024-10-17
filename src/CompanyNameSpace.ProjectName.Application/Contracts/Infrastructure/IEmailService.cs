@@ -1,9 +1,8 @@
 ﻿using CompanyNameSpace.ProjectName.Application.Models.Mail;
 
-namespace CompanyNameSpace.ProjectName.Application.Contracts.Infrastructure
+namespace CompanyNameSpace.ProjectName.Application.Contracts.Infrastructure;
+
+public interface IEmailService
 {
-    public interface IEmailService
-    {
-        Task<bool> SendEmail(Email email);
-    }
+    Task<bool> SendEmail(Email email);
 }

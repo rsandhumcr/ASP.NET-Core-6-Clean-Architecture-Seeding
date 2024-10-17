@@ -1,27 +1,27 @@
 ﻿using AutoMapper;
-using MediatR;
 using CompanyNameSpace.ProjectName.Application.Contracts.Persistence;
+using MediatR;
 
-namespace CompanyNameSpace.ProjectName.Application.Features.Orders.GetOrdersForMonth
+namespace CompanyNameSpace.ProjectName.Application.Features.Orders.GetOrdersForMonth;
+
+public class GetOrdersForMonthQueryHandler : IRequestHandler<GetOrdersForMonthQuery, PagedOrdersForMonthVm>
 {
-    public class GetOrdersForMonthQueryHandler : IRequestHandler<GetOrdersForMonthQuery, PagedOrdersForMonthVm>
+    private readonly IMapper _mapper;
+    private readonly IOrderRepository _orderRepository;
+
+    public GetOrdersForMonthQueryHandler(IOrderRepository orderRepository, IMapper mapper)
     {
-        private readonly IOrderRepository _orderRepository;
-        private readonly IMapper _mapper;
+        _orderRepository = orderRepository;
+        _mapper = mapper;
+    }
 
-        public GetOrdersForMonthQueryHandler(IOrderRepository orderRepository, IMapper mapper)
-        {
-            _orderRepository = orderRepository;
-            _mapper = mapper;
-        }
+    public async Task<PagedOrdersForMonthVm> Handle(GetOrdersForMonthQuery request, CancellationToken cancellationToken)
+    {
+        var list = await _orderRepository.GetPagedOrdersForMonth(request.Date, request.Page, request.Size);
+        var orders = _mapper.Map<List<OrdersForMonthDto>>(list);
 
-        public async Task<PagedOrdersForMonthVm> Handle(GetOrdersForMonthQuery request, CancellationToken cancellationToken)
-        {
-            var list = await _orderRepository.GetPagedOrdersForMonth(request.Date, request.Page, request.Size);
-            var orders =  _mapper.Map<List<OrdersForMonthDto>>(list);
-
-            var count = await _orderRepository.GetTotalCountOfOrdersForMonth(request.Date);
-            return new PagedOrdersForMonthVm() { Count = count, OrdersForMonth = orders, Page = request.Page, Size = request.Size };
-        }
+        var count = await _orderRepository.GetTotalCountOfOrdersForMonth(request.Date);
+        return new PagedOrdersForMonthVm
+            { Count = count, OrdersForMonth = orders, Page = request.Page, Size = request.Size };
     }
 }

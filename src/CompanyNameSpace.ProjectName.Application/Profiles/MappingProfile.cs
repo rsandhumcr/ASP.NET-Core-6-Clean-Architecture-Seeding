@@ -5,7 +5,7 @@ using CompanyNameSpace.ProjectName.Application.Features.Categories.Queries.GetCa
 using CompanyNameSpace.ProjectName.Application.Features.EntityOne.Commands.CreateEntityOne;
 using CompanyNameSpace.ProjectName.Application.Features.EntityOne.Commands.UpdateEntityOne;
 using CompanyNameSpace.ProjectName.Application.Features.EntityOne.Queries.GetEntityOneDetail;
-using CompanyNameSpace.ProjectName.Application.Features.EntityOne.Queries.GetEntityOneList;
+using CompanyNameSpace.ProjectName.Application.Features.EntityOne.Queries.GetEntityOnePagedList;
 using CompanyNameSpace.ProjectName.Application.Features.Events.Commands.CreateEvent;
 using CompanyNameSpace.ProjectName.Application.Features.Events.Commands.UpdateEvent;
 using CompanyNameSpace.ProjectName.Application.Features.Events.Queries.GetEventDetail;
@@ -14,33 +14,31 @@ using CompanyNameSpace.ProjectName.Application.Features.Events.Queries.GetEvents
 using CompanyNameSpace.ProjectName.Application.Features.Orders.GetOrdersForMonth;
 using CompanyNameSpace.ProjectName.Domain.Entities;
 
-namespace CompanyNameSpace.ProjectName.Application.Profiles
+namespace CompanyNameSpace.ProjectName.Application.Profiles;
+
+public class MappingProfile : Profile
 {
-    public class MappingProfile: Profile
+    public MappingProfile()
     {
-        public MappingProfile()
-        {
-            CreateMap<Event, EventListVm>().ReverseMap();
-            CreateMap<Event, CreateEventCommand>().ReverseMap();
-            CreateMap<Event, UpdateEventCommand>().ReverseMap();
-            CreateMap<Event, EventDetailVm>().ReverseMap();
-            CreateMap<Event, CategoryEventDto>().ReverseMap();
-            CreateMap<Event, EventExportDto>().ReverseMap();
+        CreateMap<Event, EventListVm>().ReverseMap();
+        CreateMap<Event, CreateEventCommand>().ReverseMap();
+        CreateMap<Event, UpdateEventCommand>().ReverseMap();
+        CreateMap<Event, EventDetailVm>().ReverseMap();
+        CreateMap<Event, CategoryEventDto>().ReverseMap();
+        CreateMap<Event, EventExportDto>().ReverseMap();
 
-            CreateMap<Category, CategoryDto>();
-            CreateMap<Category, CategoryListVm>();
-            CreateMap<Category, CategoryEventListVm>();
-            CreateMap<Category, CreateCategoryCommand>();
-            CreateMap<Category, CreateCategoryDto>();
+        CreateMap<Category, CategoryDto>();
+        CreateMap<Category, CategoryListVm>();
+        CreateMap<Category, CategoryEventListVm>();
+        CreateMap<Category, CreateCategoryCommand>();
+        CreateMap<Category, CreateCategoryDto>();
 
-            CreateMap<Order, OrdersForMonthDto>();
+        CreateMap<Order, OrdersForMonthDto>();
 
-            CreateMap<EntityOne, EntityOneDetailVm>().ReverseMap();
-            CreateMap<EntityOne, EntityOneListVm>().ReverseMap();
-            CreateMap<EntityOne, CreateEntityOneCommand>().ReverseMap();
-            CreateMap<EntityOne, UpdateEntityOneCommand>().ReverseMap();
-            CreateMap<EntityOne, EntityOneDto>();
-
-        }
+        CreateMap<EntityOne, EntityOneDetailVm>().ReverseMap();
+        CreateMap<EntityOne, EntityOneListVm>().ReverseMap();
+        CreateMap<EntityOne, CreateEntityOneCommand>().ReverseMap();
+        CreateMap<EntityOne, UpdateEntityOneCommand>().ReverseMap();
+        CreateMap<EntityOne, EntityOneDto>();
     }
 }

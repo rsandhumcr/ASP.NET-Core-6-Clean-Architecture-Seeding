@@ -1,9 +1,8 @@
-﻿namespace CompanyNameSpace.ProjectName.Application.Features.Events.Queries.GetEventsExport
+﻿namespace CompanyNameSpace.ProjectName.Application.Features.Events.Queries.GetEventsExport;
+
+public class EventExportFileVm
 {
-    public class EventExportFileVm
-    {
-        public string EventExportFileName { get; set; } = string.Empty;
-        public string ContentType { get; set; } = string.Empty;
-        public byte[]? Data { get; set; }
-    }
+    public string EventExportFileName { get; set; } = string.Empty;
+    public string ContentType { get; set; } = string.Empty;
+    public byte[]? Data { get; set; }
 }

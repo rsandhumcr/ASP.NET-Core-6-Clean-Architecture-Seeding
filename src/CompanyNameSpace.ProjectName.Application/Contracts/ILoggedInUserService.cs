@@ -1,7 +1,6 @@
-﻿namespace CompanyNameSpace.ProjectName.Application.Contracts
+﻿namespace CompanyNameSpace.ProjectName.Application.Contracts;
+
+public interface ILoggedInUserService
 {
-    public interface ILoggedInUserService
-    {
-        public string UserId { get; }
-    }
+    public string UserId { get; }
 }

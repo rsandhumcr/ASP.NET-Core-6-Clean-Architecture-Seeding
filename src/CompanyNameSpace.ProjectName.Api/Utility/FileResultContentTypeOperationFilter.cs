@@ -1,22 +1,22 @@
 ﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace CompanyNameSpace.ProjectName.Api.Utility
+namespace CompanyNameSpace.ProjectName.Api.Utility;
+
+public class FileResultContentTypeOperationFilter : IOperationFilter
 {
-    public class FileResultContentTypeOperationFilter : IOperationFilter
+    public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        public void Apply(OpenApiOperation operation, OperationFilterContext context)
+        var requestAttribute = context.MethodInfo.GetCustomAttributes(typeof(FileResultContentTypeAttribute), false)
+            .Cast<FileResultContentTypeAttribute>()
+            .FirstOrDefault();
+
+        if (requestAttribute == null) return;
+
+        operation.Responses.Clear();
+        operation.Responses.Add("200", new OpenApiResponse
         {
-            var requestAttribute = context.MethodInfo.GetCustomAttributes(typeof(FileResultContentTypeAttribute), false)
-                .Cast<FileResultContentTypeAttribute>()
-                .FirstOrDefault();
-
-            if (requestAttribute == null) return;
-
-            operation.Responses.Clear();
-            operation.Responses.Add("200", new OpenApiResponse
-            {
-                Content = new Dictionary<string, OpenApiMediaType>
+            Content = new Dictionary<string, OpenApiMediaType>
             {
                 {
                     requestAttribute.ContentType, new OpenApiMediaType
@@ -29,7 +29,6 @@ namespace CompanyNameSpace.ProjectName.Api.Utility
                     }
                 }
             }
-            });
-        }
+        });
     }
 }

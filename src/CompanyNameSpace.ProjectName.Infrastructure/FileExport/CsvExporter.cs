@@ -1,21 +1,20 @@
-﻿using CsvHelper;
-using CompanyNameSpace.ProjectName.Application.Contracts.Infrastructure;
+﻿using CompanyNameSpace.ProjectName.Application.Contracts.Infrastructure;
 using CompanyNameSpace.ProjectName.Application.Features.Events.Queries.GetEventsExport;
+using CsvHelper;
 
-namespace CompanyNameSpace.ProjectName.Infrastructure.FileExport
+namespace CompanyNameSpace.ProjectName.Infrastructure.FileExport;
+
+public class CsvExporter : ICsvExporter
 {
-    public class CsvExporter : ICsvExporter
+    public byte[] ExportEventsToCsv(List<EventExportDto> eventExportDtos)
     {
-        public byte[] ExportEventsToCsv(List<EventExportDto> eventExportDtos)
+        using var memoryStream = new MemoryStream();
+        using (var streamWriter = new StreamWriter(memoryStream))
         {
-            using var memoryStream = new MemoryStream();
-            using (var streamWriter = new StreamWriter(memoryStream))
-            {
-                using var csvWriter = new CsvWriter(streamWriter);
-                csvWriter.WriteRecords(eventExportDtos);
-            }
-
-            return memoryStream.ToArray();
+            using var csvWriter = new CsvWriter(streamWriter);
+            csvWriter.WriteRecords(eventExportDtos);
         }
+
+        return memoryStream.ToArray();
     }
 }

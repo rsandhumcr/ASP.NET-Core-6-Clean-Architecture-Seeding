@@ -1,7 +1,6 @@
-﻿namespace CompanyNameSpace.ProjectName.Application.Models.Authentication
+﻿namespace CompanyNameSpace.ProjectName.Application.Models.Authentication;
+
+public class RegistrationResponse
 {
-    public class RegistrationResponse
-    {
-        public string UserId { get; set; } = string.Empty;
-    }
+    public string UserId { get; set; } = string.Empty;
 }

@@ -1,9 +1,8 @@
-﻿namespace CompanyNameSpace.ProjectName.Application.Features.Orders.GetOrdersForMonth
+﻿namespace CompanyNameSpace.ProjectName.Application.Features.Orders.GetOrdersForMonth;
+
+public class OrdersForMonthDto
 {
-    public class OrdersForMonthDto
-    {
-        public Guid Id { get; set; }
-        public int OrderTotal { get; set; }
-        public DateTime OrderPlaced { get; set; }
-    }
+    public Guid Id { get; set; }
+    public int OrderTotal { get; set; }
+    public DateTime OrderPlaced { get; set; }
 }

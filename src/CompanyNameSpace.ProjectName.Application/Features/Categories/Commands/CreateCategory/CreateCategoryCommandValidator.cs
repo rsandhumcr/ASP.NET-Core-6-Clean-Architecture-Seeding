@@ -1,15 +1,14 @@
 ﻿using FluentValidation;
 
-namespace CompanyNameSpace.ProjectName.Application.Features.Categories.Commands.CreateCategory
+namespace CompanyNameSpace.ProjectName.Application.Features.Categories.Commands.CreateCategory;
+
+public class CreateCategoryCommandValidator : AbstractValidator<CreateCategoryCommand>
 {
-    public class CreateCategoryCommandValidator: AbstractValidator<CreateCategoryCommand>
+    public CreateCategoryCommandValidator()
     {
-        public CreateCategoryCommandValidator()
-        {
-            RuleFor(p => p.Name)
-                .NotEmpty().WithMessage("{PropertyName} is required.")
-                .NotNull()
-                .MaximumLength(50).WithMessage("{PropertyName} must not exceed 10 characters.");
-        }
+        RuleFor(p => p.Name)
+            .NotEmpty().WithMessage("{PropertyName} is required.")
+            .NotNull()
+            .MaximumLength(50).WithMessage("{PropertyName} must not exceed 10 characters.");
     }
 }

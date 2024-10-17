@@ -1,8 +1,7 @@
 ﻿using MediatR;
 
-namespace CompanyNameSpace.ProjectName.Application.Features.Events.Queries.GetEventsExport
+namespace CompanyNameSpace.ProjectName.Application.Features.Events.Queries.GetEventsExport;
+
+public class GetEventsExportQuery : IRequest<EventExportFileVm>
 {
-    public class GetEventsExportQuery: IRequest<EventExportFileVm>
-    {
-    }
 }

@@ -1,9 +1,8 @@
-﻿namespace CompanyNameSpace.ProjectName.Application.Models.Mail
+﻿namespace CompanyNameSpace.ProjectName.Application.Models.Mail;
+
+public class Email
 {
-    public class Email
-    {
-        public string To { get; set; } = string.Empty;
-        public string Subject { get; set; } = string.Empty;
-        public string Body { get; set; } = string.Empty;
-    }
+    public string To { get; set; } = string.Empty;
+    public string Subject { get; set; } = string.Empty;
+    public string Body { get; set; } = string.Empty;
 }

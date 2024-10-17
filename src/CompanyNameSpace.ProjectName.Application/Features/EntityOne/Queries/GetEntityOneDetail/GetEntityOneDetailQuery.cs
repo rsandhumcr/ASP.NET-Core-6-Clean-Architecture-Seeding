@@ -1,9 +1,8 @@
 ﻿using MediatR;
 
-namespace CompanyNameSpace.ProjectName.Application.Features.EntityOne.Queries.GetEntityOneDetail
+namespace CompanyNameSpace.ProjectName.Application.Features.EntityOne.Queries.GetEntityOneDetail;
+
+public class GetEntityOneDetailQuery : IRequest<EntityOneDetailVm>
 {
-    public class GetEntityOneDetailQuery: IRequest<EntityOneDetailVm>
-    {
-        public int Id { get; set; }
-    }
+    public int Id { get; set; }
 }

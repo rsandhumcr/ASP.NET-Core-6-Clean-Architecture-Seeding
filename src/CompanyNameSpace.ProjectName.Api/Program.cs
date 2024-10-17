@@ -1,5 +1,5 @@
-using Serilog;
 using CompanyNameSpace.ProjectName.Api;
+using Serilog;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -17,8 +17,8 @@ builder.Host.UseSerilog((context, loggerConfiguration) => loggerConfiguration
     .ReadFrom.Configuration(context.Configuration), isInTest);
 
 var app = builder
-       .ConfigureServices()
-       .ConfigurePipeline();
+    .ConfigureServices()
+    .ConfigurePipeline();
 
 app.UseSerilogRequestLogging();
 
@@ -32,5 +32,6 @@ app.UseSerilogRequestLogging();
 
 app.Run();
 
-public partial class Program { }
-
+public partial class Program
+{
+}
