@@ -9,8 +9,7 @@ public class ImportSalesDataCommandHandler : IRequestHandler<ImportSalesDataComm
 {
     private readonly IDataProcessor _dataProcessor;
 
-    public ImportSalesDataCommandHandler(
-        IDataProcessor dataProcessor)
+    public ImportSalesDataCommandHandler(IDataProcessor dataProcessor)
     {
         _dataProcessor = dataProcessor;
     }
@@ -34,6 +33,9 @@ public class ImportSalesDataCommandHandler : IRequestHandler<ImportSalesDataComm
         try
         {
             var dataObjects = _dataProcessor.ProcessJsonData(request);
+            if (dataObjects.Count == 0)
+                return CreateValidateImportErrorResponse("File when processed contains no data.", "No data to process.");
+
             return new ValidateImportSalesDataResult{DataObjects = dataObjects};
         }
         catch (Exception ex)
@@ -43,13 +45,14 @@ public class ImportSalesDataCommandHandler : IRequestHandler<ImportSalesDataComm
     }
 
     private async Task<ImportSalesDataCommandResponse> ProcessData(
-        List<Domain.ImportData.SalesData.ImportSalesData> importedSalesData)
+        List<Domain.ImportData.SalesData.ImportSalesData>? importedSalesData)
     {
         var departmentResults = await _dataProcessor.ProcessDepartmentData(importedSalesData);
         var productResults = await _dataProcessor.ProcessProductData(departmentResults.Departments, importedSalesData);
         var saleDataResult = await _dataProcessor.ProcessSaleData(importedSalesData);
-        var filesSuffix = (importedSalesData.Count > 1) ? "s" : string.Empty;
+        var filesSuffix = (importedSalesData != null && importedSalesData.Count > 1) ? "s" : string.Empty;
         var saleDataSuffix = (saleDataResult.SalesAdded > 1) ? "s" : string.Empty;
+        var importedSalesDataCount = (importedSalesData?.Count ?? 0);
         return new ImportSalesDataCommandResponse
         {
             DepartmentsAdded = departmentResults.DepartmentsAdded,
@@ -58,9 +61,9 @@ public class ImportSalesDataCommandHandler : IRequestHandler<ImportSalesDataComm
             ProductsUploaded = productResults.ProductsUploaded,
             SalesAdded = saleDataResult.SalesAdded,
             SalesUploaded = saleDataResult.SalesUploaded,
-            FilesUploaded = importedSalesData.Count,
-            Success = importedSalesData.Count > 0,
-            Message = $"Uploaded {importedSalesData.Count} file{filesSuffix}, with {saleDataResult.SalesAdded} sale record{saleDataSuffix} added."
+            FilesUploaded = importedSalesDataCount,
+            Success = importedSalesDataCount > 0,
+            Message = $"Uploaded {importedSalesDataCount} file{filesSuffix}, with {saleDataResult.SalesAdded} sale record{saleDataSuffix} added."
         };
     }
 
@@ -82,5 +85,5 @@ public class ValidateImportSalesDataResult
 {
     public ImportSalesDataCommandResponse? InvalidResponse { get; set; }
 
-    public List<Domain.ImportData.SalesData.ImportSalesData> DataObjects { get; set; }
+    public List<Domain.ImportData.SalesData.ImportSalesData>? DataObjects { get; set; }
 }

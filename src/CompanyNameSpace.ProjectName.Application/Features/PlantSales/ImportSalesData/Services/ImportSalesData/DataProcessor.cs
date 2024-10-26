@@ -38,7 +38,7 @@ public class DataProcessor : IDataProcessor
     }
 
     public async Task<ProcessDepartmentDataResult> ProcessDepartmentData(
-        List<Domain.ImportData.SalesData.ImportSalesData> importedDataObjectList)
+        List<Domain.ImportData.SalesData.ImportSalesData>? importedDataObjectList)
     {
         var departments = importedDataObjectList
             .SelectMany(itm => itm.Products)
@@ -70,7 +70,7 @@ public class DataProcessor : IDataProcessor
     }
 
     public async Task<ProcessProductDataResult> ProcessProductData(IReadOnlyCollection<Department>? departments,
-        List<Domain.ImportData.SalesData.ImportSalesData> importedDataObjectList)
+        List<Domain.ImportData.SalesData.ImportSalesData>? importedDataObjectList)
     {
         var products = importedDataObjectList
             .SelectMany(itm => itm.Products)
@@ -121,7 +121,7 @@ public class DataProcessor : IDataProcessor
     }
 
     public async Task<ProcessSaleDataResult> ProcessSaleData(
-        List<Domain.ImportData.SalesData.ImportSalesData> importedDataObjectList)
+        List<Domain.ImportData.SalesData.ImportSalesData>? importedDataObjectList)
     {
         var sales = importedDataObjectList
             .SelectMany(itm => itm.Products)

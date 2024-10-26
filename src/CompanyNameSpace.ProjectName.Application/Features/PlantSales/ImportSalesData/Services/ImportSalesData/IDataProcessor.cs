@@ -8,11 +8,11 @@ public interface IDataProcessor
     List<Domain.ImportData.SalesData.ImportSalesData> ProcessJsonData(ImportSalesDataCommand request);
 
     Task<ProcessDepartmentDataResult> ProcessDepartmentData(
-        List<Domain.ImportData.SalesData.ImportSalesData> importedDataObjectList);
+        List<Domain.ImportData.SalesData.ImportSalesData>? importedDataObjectList);
 
     Task<ProcessProductDataResult> ProcessProductData(IReadOnlyCollection<Department>? departments,
-        List<Domain.ImportData.SalesData.ImportSalesData> importedDataObjectList);
+        List<Domain.ImportData.SalesData.ImportSalesData>? importedDataObjectList);
 
     Task<ProcessSaleDataResult> ProcessSaleData(
-        List<Domain.ImportData.SalesData.ImportSalesData> importedDataObjectList);
+        List<Domain.ImportData.SalesData.ImportSalesData>? importedDataObjectList);
 }
