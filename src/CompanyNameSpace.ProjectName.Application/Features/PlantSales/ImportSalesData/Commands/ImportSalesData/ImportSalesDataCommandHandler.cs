@@ -52,6 +52,8 @@ public class ImportSalesDataCommandHandler : IRequestHandler<ImportSalesDataComm
         var departmentResults = await _dataProcessor.ProcessDepartmentData(importedSalesData);
         var productResults = await _dataProcessor.ProcessProductData(departmentResults.Departments, importedSalesData);
         var saleDataResult = await _dataProcessor.ProcessSaleData(importedSalesData);
+        var filesSuffix = (importedSalesData.Count > 1) ? "s" : string.Empty;
+        var saleDataSuffix = (saleDataResult.SalesAdded > 1) ? "s" : string.Empty;
         return new ImportSalesDataCommandResponse
         {
             DepartmentsAdded = departmentResults.DepartmentsAdded,
@@ -62,7 +64,7 @@ public class ImportSalesDataCommandHandler : IRequestHandler<ImportSalesDataComm
             SalesUploaded = saleDataResult.SalesUploaded,
             FilesUploaded = importedSalesData.Count,
             Success = importedSalesData.Count > 0,
-            Message = $"Uploaded {importedSalesData.Count} file/s, with {saleDataResult.SalesAdded} sale/s added."
+            Message = $"Uploaded {importedSalesData.Count} file{filesSuffix}, with {saleDataResult.SalesAdded} sale record{saleDataSuffix} added."
         };
     }
 }
