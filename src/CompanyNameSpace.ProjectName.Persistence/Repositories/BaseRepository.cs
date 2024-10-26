@@ -53,4 +53,48 @@ public class BaseRepository<T> : IAsyncRepository<T> where T : class
         DbContext.Set<T>().Remove(entity);
         await DbContext.SaveChangesAsync();
     }
+
+    public async Task<List<T>> BulkAddAsync(List<T> entityList)
+    {
+        if (!entityList.Any())
+            return new List<T>();
+
+        var entities = new List<T>();
+        foreach (var entity in entityList)
+        {
+            await DbContext.Set<T>().AddAsync(entity);
+            entities.Add(entity);
+        }
+
+        await DbContext.SaveChangesAsync();
+
+        return entities;
+    }
+
+    public async Task<List<T>> BulkUpdateAsync(List<T> entityList)
+    {
+        if (!entityList.Any())
+            return new List<T>();
+
+        var entities = new List<T>();
+        foreach (var entity in entityList)
+        {
+            DbContext.Entry(entity).State = EntityState.Modified;
+            entities.Add(entity);
+        }
+        await DbContext.SaveChangesAsync();
+        return entities;
+    }
+
+    public async Task BulkDeleteAsync(List<T> entityList)
+    {
+        if (!entityList.Any())
+            return ;
+
+        foreach (var entity in entityList)
+        {
+            DbContext.Set<T>().Remove(entity);
+        }
+        await DbContext.SaveChangesAsync();
+    }
 }

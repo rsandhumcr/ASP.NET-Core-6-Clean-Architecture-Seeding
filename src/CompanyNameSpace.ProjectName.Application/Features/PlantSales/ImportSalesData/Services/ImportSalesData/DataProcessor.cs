@@ -56,16 +56,11 @@ public class DataProcessor : IDataProcessor
 
         var departmentsDb = _mapper.Map<List<Department>>(missingDepartments);
 
-        var newDeptData = new List<Department>();
-        foreach (var department in departmentsDb)
-        {
-            var newDept = await _departmentRepository.AddAsync(department);
-            newDeptData.Add(newDept);
-        }
+        var newDeptDataDb = await _departmentRepository.BulkAddAsync(departmentsDb);
 
-        var newCount = newDeptData.Count;
+        var newCount = newDeptDataDb.Count;
 
-        var resultList = newDeptData;
+        var resultList = newDeptDataDb;
         resultList.AddRange(departmentsDbItems);
         return new ProcessDepartmentDataResult { Departments = resultList, DepartmentAdded = newCount };
     }
@@ -102,12 +97,13 @@ public class DataProcessor : IDataProcessor
             }
 
             product.Sales = null;
-            var newProduct = await _productRepository.AddAsync(product);
-            newProductData.Add(newProduct);
+            newProductData.Add(product);
         }
 
-        var newCount = newProductData.Count();
-        var productList = newProductData;
+        var newProductList = await _productRepository.BulkAddAsync(newProductData);
+
+        var newCount = newProductList.Count();
+        var productList = newProductList;
         productList.AddRange(productDbItems);
 
         return new ProcessProductDataResult { Products = productList, ProductAdded = newCount };
@@ -121,19 +117,35 @@ public class DataProcessor : IDataProcessor
             .ToList();
 
         var salesData = _mapper.Map<List<Sale>>(sales);
-        var count = 0;
-        foreach (var sale in salesData)
+        var productIds = salesData
+            .Select(itm => itm.ProductId).Distinct().ToList();
+        var newSalesList = new List<Sale>();
+        foreach (var productId in productIds)
         {
-            var foundSale =
-                await _saleRepository.GetBySalesDatesAndProductId(sale.From, sale.Until.Date, sale.ProductId);
-            if (!foundSale.Any())
+            var startDate = salesData
+                .Where(itm => itm.ProductId == productId)
+                .Min(itm => itm.From);
+            var endDate = salesData
+                .Where(itm => itm.ProductId == productId)
+                .Max(itm => itm.Until);
+            var foundSales =
+                await _saleRepository.GetSalesBetweenDatesAndByProductId(startDate, endDate, productId);
+
+            var salesForProduct = salesData.Where(itm => itm.ProductId == productId).ToList();
+            foreach (var sale in salesForProduct)
             {
-                var newSale = await _saleRepository.AddAsync(sale);
-                count++;
+                var specificSales = foundSales.Where(itm =>
+                    itm.From == sale.From && itm.Until == sale.Until && itm.ProductId == sale.ProductId).ToList();
+                if (!specificSales.Any())
+                {
+                    newSalesList.Add(sale);
+                }
             }
         }
 
-        return count;
+        await _saleRepository.BulkAddAsync(newSalesList);
+
+        return newSalesList.Count;
     }
 }
 

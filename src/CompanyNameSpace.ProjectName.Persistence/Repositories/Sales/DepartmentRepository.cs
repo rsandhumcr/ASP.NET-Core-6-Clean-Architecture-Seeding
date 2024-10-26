@@ -12,6 +12,7 @@ public class DepartmentRepository : BaseRepository<Department>, IDepartmentRepos
 
     public async Task<Department?> GetByName(string name)
     {
+        
         return await DbContext.Departments.FirstOrDefaultAsync(e => e.Name == name);
     }
 

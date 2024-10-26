@@ -18,4 +18,12 @@ public class SaleRepository : BaseRepository<Sale>, ISaleRepository
             .ToListAsync();
         return sales;
     }
+
+    public async Task<IReadOnlyList<Sale>> GetSalesBetweenDatesAndByProductId(DateTime fromDate, DateTime toDate, string productId)
+    {
+        var sales = await DbContext.Sales
+            .Where(s => s.From >= fromDate && s.Until <= toDate && s.ProductId == productId)
+            .ToListAsync();
+        return sales;
+    }
 }
