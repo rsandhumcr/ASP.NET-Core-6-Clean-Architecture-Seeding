@@ -22,11 +22,8 @@ public class FileUploadController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post([FromForm] List<IFormFile> files)
     {
-        var size = files.Sum(f => f.Length);
-
         var fileImportData = await _formFileConvertor.ConvertToFileData(files);
-
-        var dtos = await _mediator.Send(new ImportSalesDataCommand { FileImports = fileImportData });
-        return Ok(dtos);
+        var importResponse = await _mediator.Send(new ImportSalesDataCommand { FileImports = fileImportData });
+        return Ok(importResponse);
     }
 }
