@@ -2,7 +2,7 @@
 
 public class ProductFileData
 {
-    public string ProductId { get; set; }
+    public Guid ProductId { get; set; }
     public string Code { get; set; }
     public string? BarCode { get; set; }
     public string Name { get; set; }

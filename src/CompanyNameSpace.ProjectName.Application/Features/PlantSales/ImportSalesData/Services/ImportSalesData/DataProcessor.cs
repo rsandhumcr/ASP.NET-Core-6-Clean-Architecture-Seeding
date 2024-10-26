@@ -40,6 +40,9 @@ public class DataProcessor : IDataProcessor
     public async Task<ProcessDepartmentDataResult> ProcessDepartmentData(
         List<Domain.ImportData.SalesData.ImportSalesData>? importedDataObjectList)
     {
+        if (importedDataObjectList == null)
+            return new ProcessDepartmentDataResult();
+
         var departments = importedDataObjectList
             .SelectMany(itm => itm.Products)
             .Select(itm => itm.Department)
@@ -64,12 +67,10 @@ public class DataProcessor : IDataProcessor
         var newDeptDataDb = await _departmentRepository.BulkAddAsync(departmentsDb);
 
         var newRecordAddCount = newDeptDataDb.Count;
-
-        var resultList = newDeptDataDb;
-        resultList.AddRange(departmentsDbItems);
+        newDeptDataDb.AddRange(departmentsDbItems);
         return new ProcessDepartmentDataResult
         {
-            Departments = resultList, DepartmentsAdded = newRecordAddCount,
+            Departments = newDeptDataDb, DepartmentsAdded = newRecordAddCount,
             DepartmentsUploaded = departmentNames.Count
         };
     }
@@ -77,6 +78,8 @@ public class DataProcessor : IDataProcessor
     public async Task<ProcessProductDataResult> ProcessProductData(IReadOnlyCollection<Department>? departments,
         List<Domain.ImportData.SalesData.ImportSalesData>? importedDataObjectList)
     {
+        if (importedDataObjectList == null)
+            return new ProcessProductDataResult();
         var products = importedDataObjectList
             .SelectMany(itm => itm.Products)
             .DistinctBy(itm => new { itm.Name, itm.Code }).ToList();
@@ -115,12 +118,11 @@ public class DataProcessor : IDataProcessor
         var newProductList = await _productRepository.BulkAddAsync(newProductData);
 
         var newRecordAddCount = newProductList.Count();
-        var productList = newProductList;
-        productList.AddRange(productDbItems);
+        newProductList.AddRange(productDbItems);
 
         return new ProcessProductDataResult
         {
-            Products = productList, ProductsAdded = newRecordAddCount,
+            Products = newProductList, ProductsAdded = newRecordAddCount,
             ProductsUploaded = productCodes.Count
         };
     }
@@ -128,6 +130,9 @@ public class DataProcessor : IDataProcessor
     public async Task<ProcessSaleDataResult> ProcessSaleData(
         List<Domain.ImportData.SalesData.ImportSalesData>? importedDataObjectList)
     {
+        if (importedDataObjectList == null)
+            return new ProcessSaleDataResult();
+
         var sales = importedDataObjectList
             .SelectMany(itm => itm.Products)
             .SelectMany(itm => itm.Sales)
