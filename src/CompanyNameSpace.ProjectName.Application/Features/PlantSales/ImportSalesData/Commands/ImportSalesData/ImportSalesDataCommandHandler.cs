@@ -7,7 +7,6 @@ public class ImportSalesDataCommandHandler : IRequestHandler<ImportSalesDataComm
 {
     private readonly IDataProcessor _dataProcessor;
 
-
     public ImportSalesDataCommandHandler(
         IDataProcessor dataProcessor)
     {
@@ -17,14 +16,16 @@ public class ImportSalesDataCommandHandler : IRequestHandler<ImportSalesDataComm
     public async Task<ImportSalesDataCommandResponse> Handle(ImportSalesDataCommand request,
         CancellationToken cancellationToken)
     {
+        if (request.FileImports.Count == 0)
+            return new
+                ImportSalesDataCommandResponse { Success = false, Message = "File contains no data." };
+
         var dataObjects = _dataProcessor.ProcessJsonData(request);
 
         var result = await ProcessData(dataObjects);
-        result.FilesUploaded = dataObjects.Count;
 
         return result;
     }
-
 
     private async Task<ImportSalesDataCommandResponse> ProcessData(
         List<Domain.ImportData.SalesData.ImportSalesData> importedSalesData)
@@ -39,7 +40,10 @@ public class ImportSalesDataCommandHandler : IRequestHandler<ImportSalesDataComm
             ProductsAdded = productResults.ProductsAdded,
             ProductsUploaded = productResults.ProductsUploaded,
             SalesAdded = saleDataResult.SalesAdded,
-            SalesUploaded = saleDataResult.SalesUploaded
+            SalesUploaded = saleDataResult.SalesUploaded,
+            FilesUploaded = importedSalesData.Count,
+            Success = importedSalesData.Count > 0,
+            Message = $"Uploaded {importedSalesData.Count} file/s, with {saleDataResult.SalesAdded} sale/s added."
         };
     }
 }

@@ -120,7 +120,8 @@ public class DataProcessor : IDataProcessor
         };
     }
 
-    public async Task<ProcessSaleDataResult> ProcessSaleData(List<Domain.ImportData.SalesData.ImportSalesData> importedDataObjectList)
+    public async Task<ProcessSaleDataResult> ProcessSaleData(
+        List<Domain.ImportData.SalesData.ImportSalesData> importedDataObjectList)
     {
         var sales = importedDataObjectList
             .SelectMany(itm => itm.Products)
@@ -147,16 +148,13 @@ public class DataProcessor : IDataProcessor
             {
                 var specificSales = foundSales.Where(itm =>
                     itm.From == sale.From && itm.Until == sale.Until && itm.ProductId == sale.ProductId).ToList();
-                if (!specificSales.Any())
-                {
-                    newSalesList.Add(sale);
-                }
+                if (!specificSales.Any()) newSalesList.Add(sale);
             }
         }
 
         await _saleRepository.BulkAddAsync(newSalesList);
 
-        return new ProcessSaleDataResult {  SalesAdded = newSalesList.Count , SalesUploaded = salesData.Count};
+        return new ProcessSaleDataResult { SalesAdded = newSalesList.Count, SalesUploaded = salesData.Count };
     }
 }
 
