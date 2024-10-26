@@ -1,4 +1,5 @@
 ﻿using CompanyNameSpace.ProjectName.Application.Features.PlantSales.ImportSalesData.Services.ImportSalesData;
+using CompanyNameSpace.ProjectName.Application.Utils;
 using MediatR;
 
 namespace CompanyNameSpace.ProjectName.Application.Features.PlantSales.ImportSalesData.Commands.ImportSalesData;
@@ -18,9 +19,27 @@ public class ImportSalesDataCommandHandler : IRequestHandler<ImportSalesDataComm
     {
         if (request.FileImports.Count == 0)
             return new
-                ImportSalesDataCommandResponse { Success = false, Message = "File contains no data." };
+                ImportSalesDataCommandResponse
+                {
+                    Success = false, Message = "File contains no data.",
+                    ValidationErrors = new List<string> { "No data." }
+                };
 
-        var dataObjects = _dataProcessor.ProcessJsonData(request);
+        List<Domain.ImportData.SalesData.ImportSalesData> dataObjects;
+        try
+        {
+            dataObjects = _dataProcessor.ProcessJsonData(request);
+        }
+        catch (Exception ex)
+        {
+            return new
+                ImportSalesDataCommandResponse
+                {
+                    Success = false, Message = "Issues decoding File data.\n" + GeneralUtils.FormatException(ex),
+                    ValidationErrors = new List<string> { "Invalid file data." }
+                };
+        }
+
 
         var result = await ProcessData(dataObjects);
 

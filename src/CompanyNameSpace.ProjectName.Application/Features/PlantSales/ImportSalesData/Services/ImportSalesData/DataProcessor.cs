@@ -147,7 +147,8 @@ public class DataProcessor : IDataProcessor
             foreach (var sale in salesForProduct)
             {
                 var specificSales = foundSales.Where(itm =>
-                    itm.From == sale.From && itm.Until == sale.Until && itm.ProductId == sale.ProductId).ToList();
+                    itm.From == sale.From && itm.Until == sale.Until
+                                          && itm.ProductId == sale.ProductId).ToList();
                 if (!specificSales.Any()) newSalesList.Add(sale);
             }
         }
