@@ -26,7 +26,6 @@ public class FileUploadController : ControllerBase
 
         var fileImportData = await _formFileConvertor.ConvertToFileData(files);
 
-        //return Ok(new { count = files.Count, size });
         var dtos = await _mediator.Send(new ImportSalesDataCommand { FileImports = fileImportData });
         return Ok(dtos);
     }
