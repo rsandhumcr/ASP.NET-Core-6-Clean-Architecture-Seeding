@@ -10,8 +10,9 @@ public interface IDataProcessor
     Task<ProcessDepartmentDataResult> ProcessDepartmentData(
         List<Domain.ImportData.SalesData.ImportSalesData> importedDataObjectList);
 
-    Task<ProcessProductDataResult> ProcessProductData(IReadOnlyCollection<Department> departments,
+    Task<ProcessProductDataResult> ProcessProductData(IReadOnlyCollection<Department>? departments,
         List<Domain.ImportData.SalesData.ImportSalesData> importedDataObjectList);
 
-    Task<int> ProcessSaleData(List<Domain.ImportData.SalesData.ImportSalesData> importedDataObjectList);
+    Task<ProcessSaleDataResult> ProcessSaleData(
+        List<Domain.ImportData.SalesData.ImportSalesData> importedDataObjectList);
 }

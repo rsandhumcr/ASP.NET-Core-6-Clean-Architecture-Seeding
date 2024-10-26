@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using CompanyNameSpace.ProjectName.Application.Features.PlantSales.ImportSalesData.Services.ImportSalesData;
+﻿using CompanyNameSpace.ProjectName.Application.Features.PlantSales.ImportSalesData.Services.ImportSalesData;
 using MediatR;
 
 namespace CompanyNameSpace.ProjectName.Application.Features.PlantSales.ImportSalesData.Commands.ImportSalesData;
@@ -7,14 +6,11 @@ namespace CompanyNameSpace.ProjectName.Application.Features.PlantSales.ImportSal
 public class ImportSalesDataCommandHandler : IRequestHandler<ImportSalesDataCommand, ImportSalesDataCommandResponse>
 {
     private readonly IDataProcessor _dataProcessor;
-    private readonly IMapper _mapper;
 
 
     public ImportSalesDataCommandHandler(
-        IMapper mapper,
         IDataProcessor dataProcessor)
     {
-        _mapper = mapper;
         _dataProcessor = dataProcessor;
     }
 
@@ -24,6 +20,7 @@ public class ImportSalesDataCommandHandler : IRequestHandler<ImportSalesDataComm
         var dataObjects = _dataProcessor.ProcessJsonData(request);
 
         var result = await ProcessData(dataObjects);
+        result.FilesUploaded = dataObjects.Count;
 
         return result;
     }
@@ -34,12 +31,15 @@ public class ImportSalesDataCommandHandler : IRequestHandler<ImportSalesDataComm
     {
         var departmentResults = await _dataProcessor.ProcessDepartmentData(importedSalesData);
         var productResults = await _dataProcessor.ProcessProductData(departmentResults.Departments, importedSalesData);
-        var addSalesNo = await _dataProcessor.ProcessSaleData(importedSalesData);
+        var saleDataResult = await _dataProcessor.ProcessSaleData(importedSalesData);
         return new ImportSalesDataCommandResponse
         {
-            DepartmentsAdded = departmentResults.DepartmentAdded,
-            ProductsAdded = productResults.ProductAdded,
-            SalesAdded = addSalesNo
+            DepartmentsAdded = departmentResults.DepartmentsAdded,
+            DepartmentsUploaded = departmentResults.DepartmentsUploaded,
+            ProductsAdded = productResults.ProductsAdded,
+            ProductsUploaded = productResults.ProductsUploaded,
+            SalesAdded = saleDataResult.SalesAdded,
+            SalesUploaded = saleDataResult.SalesUploaded
         };
     }
 }

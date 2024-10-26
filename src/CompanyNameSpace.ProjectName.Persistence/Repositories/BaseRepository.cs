@@ -82,6 +82,7 @@ public class BaseRepository<T> : IAsyncRepository<T> where T : class
             DbContext.Entry(entity).State = EntityState.Modified;
             entities.Add(entity);
         }
+
         await DbContext.SaveChangesAsync();
         return entities;
     }
@@ -89,12 +90,9 @@ public class BaseRepository<T> : IAsyncRepository<T> where T : class
     public async Task BulkDeleteAsync(List<T> entityList)
     {
         if (!entityList.Any())
-            return ;
+            return;
 
-        foreach (var entity in entityList)
-        {
-            DbContext.Set<T>().Remove(entity);
-        }
+        foreach (var entity in entityList) DbContext.Set<T>().Remove(entity);
         await DbContext.SaveChangesAsync();
     }
 }

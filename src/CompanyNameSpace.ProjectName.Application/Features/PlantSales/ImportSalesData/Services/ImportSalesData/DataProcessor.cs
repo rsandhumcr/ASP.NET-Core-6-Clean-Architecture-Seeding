@@ -62,10 +62,14 @@ public class DataProcessor : IDataProcessor
 
         var resultList = newDeptDataDb;
         resultList.AddRange(departmentsDbItems);
-        return new ProcessDepartmentDataResult { Departments = resultList, DepartmentAdded = newCount };
+        return new ProcessDepartmentDataResult
+        {
+            Departments = resultList, DepartmentsAdded = newCount,
+            DepartmentsUploaded = departmentNames.Count
+        };
     }
 
-    public async Task<ProcessProductDataResult> ProcessProductData(IReadOnlyCollection<Department> departments,
+    public async Task<ProcessProductDataResult> ProcessProductData(IReadOnlyCollection<Department>? departments,
         List<Domain.ImportData.SalesData.ImportSalesData> importedDataObjectList)
     {
         var products = importedDataObjectList
@@ -85,19 +89,22 @@ public class DataProcessor : IDataProcessor
         var productsDb = _mapper.Map<List<Product>>(missingProducts);
 
         var newProductData = new List<Product>();
-        var departmentsList = departments.ToList();
-        foreach (var product in productsDb)
+        if (departments != null)
         {
-            if (product.Department != null)
+            var departmentsList = departments.ToList();
+            foreach (var product in productsDb)
             {
-                var foundDept = departmentsList
-                    .Find(itm => itm.DepartmentCode == product.Department.DepartmentCode);
-                product.DepartmentId = foundDept.DepartmentId;
-                product.Department = null;
-            }
+                if (product.Department != null)
+                {
+                    var foundDept = departmentsList
+                        .Find(itm => itm.DepartmentCode == product.Department.DepartmentCode);
+                    if (foundDept != null) product.DepartmentId = foundDept.DepartmentId;
+                    product.Department = null;
+                }
 
-            product.Sales = null;
-            newProductData.Add(product);
+                product.Sales = null;
+                newProductData.Add(product);
+            }
         }
 
         var newProductList = await _productRepository.BulkAddAsync(newProductData);
@@ -106,10 +113,14 @@ public class DataProcessor : IDataProcessor
         var productList = newProductList;
         productList.AddRange(productDbItems);
 
-        return new ProcessProductDataResult { Products = productList, ProductAdded = newCount };
+        return new ProcessProductDataResult
+        {
+            Products = productList, ProductsAdded = newCount,
+            ProductsUploaded = productCodes.Count
+        };
     }
 
-    public async Task<int> ProcessSaleData(List<Domain.ImportData.SalesData.ImportSalesData> importedDataObjectList)
+    public async Task<ProcessSaleDataResult> ProcessSaleData(List<Domain.ImportData.SalesData.ImportSalesData> importedDataObjectList)
     {
         var sales = importedDataObjectList
             .SelectMany(itm => itm.Products)
@@ -145,18 +156,26 @@ public class DataProcessor : IDataProcessor
 
         await _saleRepository.BulkAddAsync(newSalesList);
 
-        return newSalesList.Count;
+        return new ProcessSaleDataResult {  SalesAdded = newSalesList.Count , SalesUploaded = salesData.Count};
     }
 }
 
 public class ProcessDepartmentDataResult
 {
-    public int DepartmentAdded { get; set; }
-    public IReadOnlyCollection<Department> Departments { get; set; }
+    public int DepartmentsAdded { get; set; }
+    public int DepartmentsUploaded { get; set; }
+    public IReadOnlyCollection<Department>? Departments { get; set; }
 }
 
 public class ProcessProductDataResult
 {
-    public int ProductAdded { get; set; }
-    public IReadOnlyCollection<Product> Products { get; set; }
+    public int ProductsAdded { get; set; }
+    public int ProductsUploaded { get; set; }
+    public IReadOnlyCollection<Product>? Products { get; set; }
+}
+
+public class ProcessSaleDataResult
+{
+    public int SalesAdded { get; set; }
+    public int SalesUploaded { get; set; }
 }

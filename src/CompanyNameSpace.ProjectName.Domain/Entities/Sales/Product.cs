@@ -12,5 +12,5 @@ public class Product : AuditableEntity
 
     public int DepartmentId { get; set; }
     public Department? Department { get; set; }
-    public List<Sale> Sales { get; set; }
+    public List<Sale>? Sales { get; set; }
 }
