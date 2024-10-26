@@ -2,6 +2,7 @@
 using CompanyNameSpace.ProjectName.Application.Utils;
 using MediatR;
 
+
 namespace CompanyNameSpace.ProjectName.Application.Features.PlantSales.ImportSalesData.Commands.ImportSalesData;
 
 public class ImportSalesDataCommandHandler : IRequestHandler<ImportSalesDataCommand, ImportSalesDataCommandResponse>
@@ -17,33 +18,28 @@ public class ImportSalesDataCommandHandler : IRequestHandler<ImportSalesDataComm
     public async Task<ImportSalesDataCommandResponse> Handle(ImportSalesDataCommand request,
         CancellationToken cancellationToken)
     {
-        if (request.FileImports.Count == 0)
-            return new
-                ImportSalesDataCommandResponse
-                {
-                    Success = false, Message = "File contains no data.",
-                    ValidationErrors = new List<string> { "No data." }
-                };
+        var validateImportSalesDataResult = ValidateDeserializeImportSalesData(request);
+        if (validateImportSalesDataResult.InvalidResponse != null)
+            return validateImportSalesDataResult.InvalidResponse;
 
-        List<Domain.ImportData.SalesData.ImportSalesData> dataObjects;
+        var result = await ProcessData(validateImportSalesDataResult.DataObjects);
+        return result;
+    }
+
+    private ValidateImportSalesDataResult ValidateDeserializeImportSalesData(ImportSalesDataCommand request)
+    {
+        if (request.FileImports.Count == 0)
+            return CreateValidateImportErrorResponse("File contains no data.", "No data.");
+
         try
         {
-            dataObjects = _dataProcessor.ProcessJsonData(request);
+            var dataObjects = _dataProcessor.ProcessJsonData(request);
+            return new ValidateImportSalesDataResult{DataObjects = dataObjects};
         }
         catch (Exception ex)
         {
-            return new
-                ImportSalesDataCommandResponse
-                {
-                    Success = false, Message = "Issues decoding File data.\n" + GeneralUtils.FormatException(ex),
-                    ValidationErrors = new List<string> { "Invalid file data." }
-                };
+            return CreateValidateImportErrorResponse("Issues decoding File data.\n" + GeneralUtils.FormatException(ex), "Invalid file data.");
         }
-
-
-        var result = await ProcessData(dataObjects);
-
-        return result;
     }
 
     private async Task<ImportSalesDataCommandResponse> ProcessData(
@@ -67,4 +63,24 @@ public class ImportSalesDataCommandHandler : IRequestHandler<ImportSalesDataComm
             Message = $"Uploaded {importedSalesData.Count} file{filesSuffix}, with {saleDataResult.SalesAdded} sale record{saleDataSuffix} added."
         };
     }
+
+    private ValidateImportSalesDataResult CreateValidateImportErrorResponse(string message, string validationError)
+    {
+        return new ValidateImportSalesDataResult
+        {
+            InvalidResponse = new ImportSalesDataCommandResponse
+            {
+                Success = false,
+                Message = message,
+                ValidationErrors = new List<string> { validationError }
+            }
+        };
+    }
+}
+
+public class ValidateImportSalesDataResult
+{
+    public ImportSalesDataCommandResponse? InvalidResponse { get; set; }
+
+    public List<Domain.ImportData.SalesData.ImportSalesData> DataObjects { get; set; }
 }

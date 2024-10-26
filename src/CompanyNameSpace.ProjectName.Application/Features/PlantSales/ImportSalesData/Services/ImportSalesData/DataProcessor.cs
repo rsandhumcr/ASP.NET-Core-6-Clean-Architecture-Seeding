@@ -58,13 +58,13 @@ public class DataProcessor : IDataProcessor
 
         var newDeptDataDb = await _departmentRepository.BulkAddAsync(departmentsDb);
 
-        var newCount = newDeptDataDb.Count;
+        var newRecordAddCount = newDeptDataDb.Count;
 
         var resultList = newDeptDataDb;
         resultList.AddRange(departmentsDbItems);
         return new ProcessDepartmentDataResult
         {
-            Departments = resultList, DepartmentsAdded = newCount,
+            Departments = resultList, DepartmentsAdded = newRecordAddCount,
             DepartmentsUploaded = departmentNames.Count
         };
     }
@@ -109,13 +109,13 @@ public class DataProcessor : IDataProcessor
 
         var newProductList = await _productRepository.BulkAddAsync(newProductData);
 
-        var newCount = newProductList.Count();
+        var newRecordAddCount = newProductList.Count();
         var productList = newProductList;
         productList.AddRange(productDbItems);
 
         return new ProcessProductDataResult
         {
-            Products = productList, ProductsAdded = newCount,
+            Products = productList, ProductsAdded = newRecordAddCount,
             ProductsUploaded = productCodes.Count
         };
     }
