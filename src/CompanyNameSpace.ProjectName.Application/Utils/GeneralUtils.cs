@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using System.Text.Json;
 
 namespace CompanyNameSpace.ProjectName.Application.Utils;
 
@@ -23,5 +24,36 @@ public class GeneralUtils
     {
         var error = FormatException(ex);
         Debug.WriteLine(error);
+    }
+
+    public static T? ConvertToObject<T>(string jsonData)
+    {
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+        return JsonSerializer.Deserialize<T>(jsonData, options);
+    }
+
+    public static string ConvertToJson(object objectItem)
+    {
+        var options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+        return JsonSerializer.Serialize(objectItem, options);
+    }
+
+    public static List<T> ConvertJsonData<T>(List<string> dataList)
+    {
+        var listObjectData = new List<T>();
+
+        foreach (var stringData in dataList)
+        {
+            var data = ConvertToObject<T>(stringData);
+            if (data != null) listObjectData.Add(data);
+        }
+
+        return listObjectData;
     }
 }

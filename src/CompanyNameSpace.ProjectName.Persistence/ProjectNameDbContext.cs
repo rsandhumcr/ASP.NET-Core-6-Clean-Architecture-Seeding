@@ -1,6 +1,7 @@
 ﻿using CompanyNameSpace.ProjectName.Application.Contracts;
 using CompanyNameSpace.ProjectName.Domain.Common;
 using CompanyNameSpace.ProjectName.Domain.Entities;
+using CompanyNameSpace.ProjectName.Domain.Entities.Sales;
 using Microsoft.EntityFrameworkCore;
 
 namespace CompanyNameSpace.ProjectName.Persistence;
@@ -26,6 +27,9 @@ public class ProjectNameDbContext : DbContext
     public DbSet<Category> Categories { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<EntityOne> EntityOnes { get; set; }
+    public DbSet<Department> Departments { get; set; }
+    public DbSet<Product> Products { get; set; }
+    public DbSet<Sale> Sales { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

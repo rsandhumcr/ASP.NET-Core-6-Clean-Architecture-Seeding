@@ -9,6 +9,7 @@ using CompanyNameSpace.ProjectName.Infrastructure;
 using CompanyNameSpace.ProjectName.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+
 //using Serilog;
 
 namespace CompanyNameSpace.ProjectName.Api;
@@ -37,6 +38,8 @@ public static class StartupExtensions
             options.AddPolicy("Open", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
         });
 
+
+        builder.Services.AddScoped<IFormFileConvertor, FormFileConvertor>();
 
         return builder.Build();
     }

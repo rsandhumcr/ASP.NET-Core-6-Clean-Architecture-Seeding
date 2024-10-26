@@ -1,0 +1,84 @@
+{
+  "products":
+  [
+    {
+      "productID": "63a88aee-fa1a-404e-9248-6f514ea1ac5e",
+      "code": "647450",
+      "barCode": "1 234567 890128",
+      "name": "Euphorbia Silver Swan 1.5ltr",
+      "description": null,
+      "department": {
+        "departmentCode": "SB",
+        "name": "Spring Bedding"
+      },
+      "sales": [
+        {
+          "from": "2023-01-01T00:00:00Z",
+          "until": "2023-01-31T00:00:00Z",
+          "quantity": 33
+        },
+        {
+          "from": "2023-02-01T00:00:00Z",
+          "until": "2023-02-28T00:00:00Z",
+          "quantity": 58
+        },
+        {
+          "from": "2023-03-01T00:00:00Z",
+          "until": "2023-03-30T00:00:00Z",
+          "quantity": 58
+        }
+      ]
+    },
+    {
+      "productID": "bda0819c-66b0-4d7f-ab10-58a90d60e86d",
+      "code": "548517",
+      "barCode": null,
+      "name": "Acanthus Whitewater 3ltr",
+      "description": null,
+      "department": {
+        "departmentCode": "SB",
+        "name": "Spring Bedding"
+      },
+      "sales": [
+        {
+          "from": "2023-01-01T00:00:00Z",
+          "until": "2023-01-31T00:00:00Z",
+          "quantity": 21
+        },
+        {
+          "from": "2023-02-01T00:00:00Z",
+          "until": "2023-02-28T00:00:00Z",
+          "quantity": 98
+        },
+        {
+          "from": "2023-03-01T00:00:00Z",
+          "until": "2023-03-30T00:00:00Z",
+          "quantity": 121
+        }
+      ]
+    },
+    {
+      "productID": "e0647583-2a37-4c2a-8d28-a10650dcf9db",
+      "code": "833131",
+      "barCode": "1 987366 985632",
+      "name": "Geranium Horizon Salmon 6X9cm",
+      "description": "Geranium Horizon Salmon produces masses of showy flower clusters that create outstanding colour for sunny borders and containers through summer and into autumn.",
+      "department": {
+        "departmentCode": "SB",
+        "name": "Spring Bedding"
+      },
+      "sales": [
+        {
+          "from": "2023-01-01T00:00:00Z",
+          "until": "2023-01-31T00:00:00Z",
+          "quantity": 8
+        },
+        {
+          "from": "2023-02-01T00:00:00Z",
+          "until": "2023-02-28T00:00:00Z",
+          "quantity": 22
+        }
+      ]
+    }
+  ]
+}

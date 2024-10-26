@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Shouldly;
 using CompanyNameSpace.ProjectName.Application.Exceptions;
 using CompanyNameSpace.ProjectName.Application.Profiles;
+using Shouldly;
 
 namespace CompanyNameSpace.ProjectName.Application.UnitTests.Shared;
 

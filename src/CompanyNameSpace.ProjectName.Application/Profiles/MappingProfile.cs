@@ -13,6 +13,8 @@ using CompanyNameSpace.ProjectName.Application.Features.Events.Queries.GetEvents
 using CompanyNameSpace.ProjectName.Application.Features.Events.Queries.GetEventsList;
 using CompanyNameSpace.ProjectName.Application.Features.Orders.GetOrdersForMonth;
 using CompanyNameSpace.ProjectName.Domain.Entities;
+using CompanyNameSpace.ProjectName.Domain.Entities.Sales;
+using CompanyNameSpace.ProjectName.Domain.ImportData.SalesData;
 
 namespace CompanyNameSpace.ProjectName.Application.Profiles;
 
@@ -40,5 +42,9 @@ public class MappingProfile : Profile
         CreateMap<EntityOne, CreateEntityOneCommand>().ReverseMap();
         CreateMap<EntityOne, UpdateEntityOneCommand>().ReverseMap();
         CreateMap<EntityOne, EntityOneDto>();
+
+        CreateMap<DepartmentFileData, Department>();
+        CreateMap<ProductFileData, Product>();
+        CreateMap<SaleFileData, Sale>();
     }
 }

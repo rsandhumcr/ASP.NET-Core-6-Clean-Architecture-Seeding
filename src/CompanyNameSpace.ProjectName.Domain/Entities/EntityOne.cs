@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using CompanyNameSpace.ProjectName.Domain.Common;
+﻿using CompanyNameSpace.ProjectName.Domain.Common;
 
 namespace CompanyNameSpace.ProjectName.Domain.Entities;
 
