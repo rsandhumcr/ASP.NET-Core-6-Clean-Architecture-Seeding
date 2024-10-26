@@ -42,17 +42,22 @@ public class DataProcessor : IDataProcessor
     {
         var departments = importedDataObjectList
             .SelectMany(itm => itm.Products)
-            .Select(itm => itm.Department).DistinctBy(itm => new { itm.Name, itm.DepartmentCode }).ToList();
+            .Select(itm => itm.Department)
+            .DistinctBy(itm => new { itm.Name, itm.DepartmentCode })
+            .ToList();
 
         var departmentNames = departments
             .Select(dpt => dpt.Name).Distinct().ToList();
 
-        var departmentsDbItems = await _departmentRepository.GetByNames(departmentNames);
-        var storedDepartments = departmentsDbItems.Select(dpt => dpt.DepartmentCode).ToList();
+        var departmentsDbItems = await _departmentRepository
+            .GetByNames(departmentNames);
+        var storedDepartmentCodes = departmentsDbItems
+            .Select(dpt => dpt.DepartmentCode)
+            .ToList();
 
         var missingDepartments = departments
-            .Where(dtp =>
-                !storedDepartments.Contains(dtp.DepartmentCode)).ToList();
+            .Where(dtp => !storedDepartmentCodes.Contains(dtp.DepartmentCode))
+            .ToList();
 
         var departmentsDb = _mapper.Map<List<Department>>(missingDepartments);
 
@@ -146,9 +151,10 @@ public class DataProcessor : IDataProcessor
             var salesForProduct = salesData.Where(itm => itm.ProductId == productId).ToList();
             foreach (var sale in salesForProduct)
             {
-                var specificSales = foundSales.Where(itm =>
-                    itm.From == sale.From && itm.Until == sale.Until
-                                          && itm.ProductId == sale.ProductId).ToList();
+                var specificSales = foundSales
+                    .Where(itm => itm.From == sale.From 
+                                  && itm.Until == sale.Until 
+                                  && itm.ProductId == sale.ProductId).ToList();
                 if (!specificSales.Any()) newSalesList.Add(sale);
             }
         }
