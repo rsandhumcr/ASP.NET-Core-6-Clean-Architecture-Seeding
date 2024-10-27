@@ -189,7 +189,11 @@ public class DataProcessor : IDataProcessor
 
         await _saleRepository.BulkAddAsync(newSalesList);
 
-        return new ProcessSaleDataResult { SalesAdded = newSalesList.Count, SalesUploaded = sales.Count };
+        return new ProcessSaleDataResult
+        {
+            SalesAdded = newSalesList.Count, SalesUploaded = sales.Count,
+            Sales = newSalesList
+        };
     }
 }
 
@@ -211,4 +215,5 @@ public class ProcessSaleDataResult
 {
     public int SalesAdded { get; set; }
     public int SalesUploaded { get; set; }
+    public IReadOnlyCollection<Sale> Sales { get; set; }
 }
