@@ -7,12 +7,19 @@ public interface IDataProcessor
 {
     List<Domain.ImportData.SalesData.ImportSalesData> ProcessJsonData(ImportSalesDataCommand request);
 
-    Task<ProcessDepartmentDataResult> ProcessDepartmentData(
+    List<Department> ExtractDepartmentsAndConvertToDbEntity(
         List<Domain.ImportData.SalesData.ImportSalesData>? importedDataObjectList);
+
+    List<Product> ExtractProductsAndConvertToDbEntity(
+        List<Domain.ImportData.SalesData.ImportSalesData>? importedDataObjectList);
+
+    List<Sale> ExtractSalesAndConvertToDbEntity(
+        List<Domain.ImportData.SalesData.ImportSalesData>? importedDataObjectList);
+
+    Task<ProcessDepartmentDataResult> ProcessDepartmentData(List<Department> departmentDbList);
 
     Task<ProcessProductDataResult> ProcessProductData(IReadOnlyCollection<Department>? departments,
-        List<Domain.ImportData.SalesData.ImportSalesData>? importedDataObjectList);
+        List<Product> productsList);
 
-    Task<ProcessSaleDataResult> ProcessSaleData(
-        List<Domain.ImportData.SalesData.ImportSalesData>? importedDataObjectList);
+    Task<ProcessSaleDataResult> ProcessSaleData(IReadOnlyCollection<Sale>? sales);
 }

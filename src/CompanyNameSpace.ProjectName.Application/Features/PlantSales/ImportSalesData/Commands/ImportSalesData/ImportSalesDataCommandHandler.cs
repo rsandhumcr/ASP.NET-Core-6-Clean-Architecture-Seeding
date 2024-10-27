@@ -47,12 +47,19 @@ public class ImportSalesDataCommandHandler : IRequestHandler<ImportSalesDataComm
     private async Task<ImportSalesDataCommandResponse> ProcessData(
         List<Domain.ImportData.SalesData.ImportSalesData>? importedSalesData)
     {
-        var departmentResults = await _dataProcessor.ProcessDepartmentData(importedSalesData);
-        var productResults = await _dataProcessor.ProcessProductData(departmentResults.Departments, importedSalesData);
-        var saleDataResult = await _dataProcessor.ProcessSaleData(importedSalesData);
+        var importedDepartments = _dataProcessor.ExtractDepartmentsAndConvertToDbEntity(importedSalesData);
+        var departmentResults = await _dataProcessor.ProcessDepartmentData(importedDepartments);
+
+        var importProducts = _dataProcessor.ExtractProductsAndConvertToDbEntity(importedSalesData);
+        var productResults = await _dataProcessor.ProcessProductData(departmentResults.Departments, importProducts);
+
+        var importSales = _dataProcessor.ExtractSalesAndConvertToDbEntity(importedSalesData);
+        var saleDataResult = await _dataProcessor.ProcessSaleData(importSales);
+
         var filesSuffix = (importedSalesData != null && importedSalesData.Count > 1) ? "s" : string.Empty;
         var saleDataSuffix = (saleDataResult.SalesAdded > 1) ? "s" : string.Empty;
         var importedSalesDataCount = (importedSalesData?.Count ?? 0);
+
         return new ImportSalesDataCommandResponse
         {
             DepartmentsAdded = departmentResults.DepartmentsAdded,

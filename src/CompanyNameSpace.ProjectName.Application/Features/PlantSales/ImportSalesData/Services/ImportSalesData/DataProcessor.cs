@@ -37,34 +37,40 @@ public class DataProcessor : IDataProcessor
         return data;
     }
 
-    public async Task<ProcessDepartmentDataResult> ProcessDepartmentData(
-        List<Domain.ImportData.SalesData.ImportSalesData>? importedDataObjectList)
+    public List<Department> ExtractDepartmentsAndConvertToDbEntity(List<Domain.ImportData.SalesData.ImportSalesData>? importedDataObjectList)
     {
         if (importedDataObjectList == null)
-            return new ProcessDepartmentDataResult();
+            return new List<Department>();
 
         var departments = importedDataObjectList
             .SelectMany(itm => itm.Products)
             .Select(itm => itm.Department)
             .DistinctBy(itm => new { itm.Name, itm.DepartmentCode })
             .ToList();
+        var departmentsDb = _mapper.Map<List<Department>>(departments);
+        return departmentsDb;
+    }
 
-        var departmentNames = departments
+    public async Task<ProcessDepartmentDataResult> ProcessDepartmentData(List<Department> departmentDbList)
+    {
+        if (!departmentDbList.Any())
+            return new ProcessDepartmentDataResult();
+
+        var departmentNames = departmentDbList
             .Select(dpt => dpt.Name).Distinct().ToList();
 
         var departmentsDbItems = await _departmentRepository
             .GetByNames(departmentNames);
+
         var storedDepartmentCodes = departmentsDbItems
             .Select(dpt => dpt.DepartmentCode)
             .ToList();
 
-        var missingDepartments = departments
+        var missingDepartments = departmentDbList
             .Where(dtp => !storedDepartmentCodes.Contains(dtp.DepartmentCode))
             .ToList();
 
-        var departmentsDb = _mapper.Map<List<Department>>(missingDepartments);
-
-        var newDeptDataDb = await _departmentRepository.BulkAddAsync(departmentsDb);
+        var newDeptDataDb = await _departmentRepository.BulkAddAsync(missingDepartments);
 
         var newRecordAddCount = newDeptDataDb.Count;
         newDeptDataDb.AddRange(departmentsDbItems);
@@ -75,32 +81,41 @@ public class DataProcessor : IDataProcessor
         };
     }
 
-    public async Task<ProcessProductDataResult> ProcessProductData(IReadOnlyCollection<Department>? departments,
+
+    public List<Product> ExtractProductsAndConvertToDbEntity(
         List<Domain.ImportData.SalesData.ImportSalesData>? importedDataObjectList)
     {
         if (importedDataObjectList == null)
-            return new ProcessProductDataResult();
+            return new List<Product>();
+
         var products = importedDataObjectList
             .SelectMany(itm => itm.Products)
             .DistinctBy(itm => new { itm.Name, itm.Code }).ToList();
 
-        var productCodes = products
+        var productsDb = _mapper.Map<List<Product>>(products);
+        return productsDb;
+    }
+
+    public async Task<ProcessProductDataResult> ProcessProductData(IReadOnlyCollection<Department>? departments,  
+        List<Product> productsList)
+    {
+        if (!productsList.Any())
+            return new ProcessProductDataResult();
+
+        var productCodes = productsList
             .Select(dpt => dpt.Code).Distinct().ToList();
 
         var productDbItems = await _productRepository.GetByCodes(productCodes);
-        var storedProducts = productDbItems.Select(dpt => dpt.Code).ToList();
+        var storedProductCodes = productDbItems.Select(dpt => dpt.Code).ToList();
 
-        var missingProducts = products
+        var missingProducts = productsList
             .Where(dtp =>
-                !storedProducts.Contains(dtp.Code)).ToList();
+                !storedProductCodes.Contains(dtp.Code)).ToList();
 
-        var productsDb = _mapper.Map<List<Product>>(missingProducts);
-
-        var newProductData = new List<Product>();
         if (departments != null)
         {
             var departmentsList = departments.ToList();
-            foreach (var product in productsDb)
+            foreach (var product in missingProducts)
             {
                 if (product.Department != null)
                 {
@@ -111,11 +126,10 @@ public class DataProcessor : IDataProcessor
                 }
 
                 product.Sales = null;
-                newProductData.Add(product);
             }
         }
 
-        var newProductList = await _productRepository.BulkAddAsync(newProductData);
+        var newProductList = await _productRepository.BulkAddAsync(missingProducts);
 
         var newRecordAddCount = newProductList.Count();
         newProductList.AddRange(productDbItems);
@@ -127,11 +141,11 @@ public class DataProcessor : IDataProcessor
         };
     }
 
-    public async Task<ProcessSaleDataResult> ProcessSaleData(
+    public List<Sale> ExtractSalesAndConvertToDbEntity(
         List<Domain.ImportData.SalesData.ImportSalesData>? importedDataObjectList)
     {
         if (importedDataObjectList == null)
-            return new ProcessSaleDataResult();
+            return new List<Sale>();
 
         var sales = importedDataObjectList
             .SelectMany(itm => itm.Products)
@@ -139,21 +153,30 @@ public class DataProcessor : IDataProcessor
             .ToList();
 
         var salesData = _mapper.Map<List<Sale>>(sales);
-        var productIds = salesData
+        return salesData;
+    }
+
+    public async Task<ProcessSaleDataResult> ProcessSaleData(IReadOnlyCollection<Sale>? sales)
+    {
+        if (!sales.Any())
+            return new ProcessSaleDataResult();
+
+        var productIds = sales
             .Select(itm => itm.ProductId).Distinct().ToList();
         var newSalesList = new List<Sale>();
+
         foreach (var productId in productIds)
         {
-            var startDate = salesData
+            var startDate = sales
                 .Where(itm => itm.ProductId == productId)
                 .Min(itm => itm.From);
-            var endDate = salesData
+            var endDate = sales
                 .Where(itm => itm.ProductId == productId)
                 .Max(itm => itm.Until);
             var foundSales =
                 await _saleRepository.GetSalesBetweenDatesAndByProductId(startDate, endDate, productId);
 
-            var salesForProduct = salesData.Where(itm => itm.ProductId == productId).ToList();
+            var salesForProduct = sales.Where(itm => itm.ProductId == productId).ToList();
             foreach (var sale in salesForProduct)
             {
                 var specificSales = foundSales
@@ -166,7 +189,7 @@ public class DataProcessor : IDataProcessor
 
         await _saleRepository.BulkAddAsync(newSalesList);
 
-        return new ProcessSaleDataResult { SalesAdded = newSalesList.Count, SalesUploaded = salesData.Count };
+        return new ProcessSaleDataResult { SalesAdded = newSalesList.Count, SalesUploaded = sales.Count };
     }
 }
 
