@@ -158,7 +158,7 @@ public class DataProcessor : IDataProcessor
 
     public async Task<ProcessSaleDataResult> ProcessSaleData(IReadOnlyCollection<Sale>? sales)
     {
-        if (!sales.Any())
+        if (sales == null || !sales.Any())
             return new ProcessSaleDataResult();
 
         var productIds = sales
@@ -215,5 +215,5 @@ public class ProcessSaleDataResult
 {
     public int SalesAdded { get; set; }
     public int SalesUploaded { get; set; }
-    public IReadOnlyCollection<Sale> Sales { get; set; }
+    public IReadOnlyCollection<Sale>? Sales { get; set; }
 }
