@@ -11,7 +11,7 @@ public class SaleRepository : BaseRepository<Sale>, ISaleRepository
     }
 
     public async Task<IReadOnlyList<Sale>> GetBySalesDatesAndProductId(DateTime fromDate, DateTime toDate,
-        string productId)
+        Guid productId)
     {
         var sales = await DbContext.Sales
             .Where(s => s.From == fromDate && s.Until == toDate && s.ProductId == productId)
@@ -20,7 +20,7 @@ public class SaleRepository : BaseRepository<Sale>, ISaleRepository
     }
 
     public async Task<IReadOnlyList<Sale>> GetSalesBetweenDatesAndByProductId(DateTime fromDate, DateTime toDate,
-        string productId)
+        Guid productId)
     {
         var sales = await DbContext.Sales
             .Where(s => s.From >= fromDate && s.Until <= toDate && s.ProductId == productId)

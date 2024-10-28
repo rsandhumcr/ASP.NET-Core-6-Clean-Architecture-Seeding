@@ -3,6 +3,8 @@ using CompanyNameSpace.ProjectName.Application.Contracts.Persistence.Sales;
 using CompanyNameSpace.ProjectName.Application.Features.PlantSales.ImportSalesData.Commands.ImportSalesData;
 using CompanyNameSpace.ProjectName.Application.Utils;
 using CompanyNameSpace.ProjectName.Domain.Entities.Sales;
+using System.Drawing;
+using System.Linq;
 
 namespace CompanyNameSpace.ProjectName.Application.Features.PlantSales.ImportSalesData.Services.ImportSalesData;
 
@@ -153,7 +155,8 @@ public class DataProcessor : IDataProcessor
             .ToList();
 
         var salesData = _mapper.Map<List<Sale>>(sales);
-        return salesData;
+        var salesUnique = salesData.Distinct(new ComparerSale()).ToList();
+        return salesUnique;
     }
 
     public async Task<ProcessSaleDataResult> ProcessSaleData(IReadOnlyCollection<Sale>? sales)
@@ -194,6 +197,29 @@ public class DataProcessor : IDataProcessor
             SalesAdded = newSalesList.Count, SalesUploaded = sales.Count,
             Sales = newSalesList
         };
+    }
+}
+
+public class ComparerSale : IEqualityComparer<Sale>
+{
+    public bool Equals(Sale? x, Sale? y)
+    {
+        if (x == null && y == null)
+            return true;
+        if (x != null && y == null)
+            return false;
+        if (x == null && y != null)
+            return false;
+        return x.ProductId == y.ProductId && x.From == y.From && x.Until == y.Until && x.Quantity == y.Quantity;
+    }
+
+    public int GetHashCode(Sale obj)
+    {
+        return
+            obj.ProductId.GetHashCode() +
+            obj.From.GetHashCode() +
+            obj.Until.GetHashCode() +
+            obj.Quantity.GetHashCode();
     }
 }
 

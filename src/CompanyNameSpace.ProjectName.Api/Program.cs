@@ -24,7 +24,7 @@ app.UseSerilogRequestLogging();
 
 // Resets the database when executed
 // ProjectNameDb
-//await app.ResetDatabaseAsync();
+await app.ResetDatabaseAsync();
 
 // Populate the Identity database when executed
 // ProjectNameIdentityDb
