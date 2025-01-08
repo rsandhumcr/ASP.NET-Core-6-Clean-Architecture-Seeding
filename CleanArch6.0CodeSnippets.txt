@@ -1,0 +1,468 @@
+Gill Cleeren
+
+src
+	API
+		CompanyNameSpace.ProjectName.Api
+			Controllers
+				Entity01Controller.cs
+			Program.cs
+			StartupExtensions.cs
+		
+	Core
+		CompanyNameSpace.ProjectName.Application
+			Contracts
+				Identity
+					IAuthenticationService.cs
+				Infrastructure
+					IExternalService.cs
+				Persistence
+					IAsyncRepository.cs3
+					IEntity01.cs
+			Exceptions
+				BadRequestException.cs
+				NotFoundException.cs
+				ValidationException.cs
+			Features
+				Entity01
+					Commands
+						CreateEntity01
+							CreateEntity01Command.cs
+							CreateEntity01CommandHandler.cs
+							CreateEntity01CommandValidator.cs
+						DeleteEntity01
+							DeleteEntity01Command.cs
+							DeleteEntity01CommandHandler.cs
+						UpdateEntity01
+							UpdateEntity01Command.cs
+							UpdateEntity01CommandHandler.cs
+							UpdateEntity01CommandResponse.cs
+							UpdateEntity01CommandValidator.cs
+					Queries
+						GetEntity01Detail
+							Entity01Vm.cs
+							GetEntity01DetailQuery.cs
+							GetEntity01DetailQueryHandler.cs
+						GetEntity01List 	
+							Entity01ListVm.cs
+							GetEntity01ListQuery.cs
+							GetEntity01ListQueryHandler.cs						
+			Models
+				ExternalService
+					ExternalServiceModel.cs
+					ExternalServiceSettings.cs
+			Profile
+				MappingProfile.cs
+			Responses
+				BaseResponse.cs
+			ApplicationServiceRegistration.cs
+			
+		CompanyNameSpace.ProjectName.Domain
+			Common
+				AuditableEntity.cs
+			Entitues
+				Entity01.cs
+				
+	Infrastructure
+		CompanyNameSpace.ProjectName.Identity
+			Models
+				ApplicationUser.cs
+			Services
+				AuthenticationService.cs
+			IdentityServiceExtensions.cs
+		CompanyNameSpace.ProjectName.Infrastructure
+			ExternalService
+				ExternalService.cs
+			InfrastructureServiceRegistration.cs
+		CompanyNameSpace.ProjectName.Persistence
+			Migrations
+			Repositories
+				BaseRepository.cs
+				Entity01Respository.cs
+			CompanyNameSpaceDbContext.cs
+			PersistenceServiceRegistration.cs
+	UI
+	Test
+
+
+Entities
+	
+public class AuditableEntity
+{
+    public string? CreatedBy { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public string? LastModifiedBy { get; set; }
+    public DateTime? LastModifiedDate { get; set; }
+}
+
+public class EntityOne : AuditableEntity
+{
+    public int EntityOneId { get; set; }
+    public int TypeId { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public decimal Price { get; set; }
+    public string? Description { get; set; }
+}
+
+Contracts
+
+public interface IAsyncRepository<T> where T : class
+{
+    Task<T?> GetByIdAsync(Guid id);
+    Task<T?> GetByIntIdAsync(int id);
+    Task<IReadOnlyList<T>> ListAllAsync();
+    Task<T> AddAsync(T entity);
+    Task UpdateAsync(T entity);
+    Task DeleteAsync(T entity);
+    Task<IReadOnlyList<T>> GetPagedResponseAsync(int page, int size);
+}
+
+public interface IEntityOneRepository : IAsyncRepository<EntityOne>
+{
+    Task<IReadOnlyList<EntityOne>> GetPagedEntityOneList(int page, int size);
+}
+
+Commands
+
+{
+    public class CreateEntityOneCommand : IRequest<int>
+    {
+        public int TypeId { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public decimal Price { get; set; }
+        public string? Description { get; set; }
+        public override string ToString()
+        {
+            return $"EntityOne name: {Name}; Price: {Price}; Description: {Description}";
+        }
+    }
+	
+
+    public class CreateEntityOneCommandHandler : IRequestHandler<CreateEntityOneCommand, int>
+    {
+        private readonly IAsyncRepository<Domain.Entities.EntityOne> _entityOneRepository;
+        private readonly IMapper _mapper;
+        private readonly ILogger<CreateEntityOneCommandHandler> _logger;
+        public CreateEntityOneCommandHandler(IAsyncRepository<Domain.Entities.EntityOne> entityOneRepository,
+            IMapper mapper, ILogger<CreateEntityOneCommandHandler> logger)
+        {
+            _entityOneRepository = entityOneRepository;
+            _mapper = mapper;
+            _logger = logger;
+        }
+        public async Task<int> Handle(CreateEntityOneCommand request, CancellationToken cancellationToken)
+        {
+            var validator = new CreateEntityOneCommandValidator();
+            var validationResult = await validator.ValidateAsync(request);
+
+            if (validationResult.Errors.Count > 0)
+                throw new Exceptions.ValidationException(validationResult);
+
+            var @entityOne = _mapper.Map<Domain.Entities.EntityOne>(request);
+
+
+            @entityOne = await _entityOneRepository.AddAsync(@entityOne);
+
+            return @entityOne.EntityOneId;
+        }
+    }
+	
+    public class CreateEntityOneCommandValidator : AbstractValidator<CreateEntityOneCommand>
+    {
+        public CreateEntityOneCommandValidator()
+        {
+            RuleFor(p => p.Name)
+                .NotEmpty().WithMessage("{PropertyName} is required.")
+                .NotNull()
+                .MaximumLength(50).WithMessage("{PropertyName} must not exceed 50 characters.");
+
+            RuleFor(p => p.Price)
+                .NotEmpty().WithMessage("{PropertyName} is required.")
+                .GreaterThan(0);
+        }
+    }
+
+Queries
+
+public class EntityOneDetailVm
+{
+    public int EntityOneId { get; set; }
+    public int TypeId { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public decimal Price { get; set; }
+    public string? Description { get; set; }
+}
+
+public class GetEntityOneDetailQuery : IRequest<EntityOneDetailVm>
+{
+    public int Id { get; set; }
+}
+
+public class GetEntityOneDetailQueryHandler : IRequestHandler<GetEntityOneDetailQuery, EntityOneDetailVm>
+{
+    private readonly IAsyncRepository<Domain.Entities.EntityOne> _entityOneRepository;
+    private readonly IMapper _mapper;
+
+    public GetEntityOneDetailQueryHandler(IAsyncRepository<Domain.Entities.EntityOne> entityOneRepository,
+        IMapper mapper)
+    {
+        _entityOneRepository = entityOneRepository;
+        _mapper = mapper;
+    }
+
+    public async Task<EntityOneDetailVm> Handle(GetEntityOneDetailQuery request, CancellationToken cancellationToken)
+    {
+        var entityOne = await _entityOneRepository.GetByIntIdAsync(request.Id);
+        if (entityOne == null) throw new NotFoundException(nameof(entityOne), request.Id);
+        var entityOneDto = _mapper.Map<EntityOneDetailVm>(entityOne);
+
+        return entityOneDto;
+    }
+}
+
+
+
+
+Service Registrations
+	
+    public static class PersistenceServiceRegistration
+    {
+        public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddDbContext<ProjectNameDbContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("ProjectNameConnectionString")));
+
+            services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
+            services.AddScoped<IEntityOneRepository, EntityOneRepository>();
+
+            return services;    
+        }
+    }
+
+DbContext
+	
+public class ProjectNameDbContext: DbContext
+{
+    private readonly ILoggedInUserService? _loggedInUserService;
+
+    /*
+    public ProjectNameDbContext(DbContextOptions<ProjectNameDbContext> options)
+       : base(options)
+    {
+    }
+    */
+    public ProjectNameDbContext(DbContextOptions<ProjectNameDbContext> options, ILoggedInUserService loggedInUserService)
+        : base(options)
+    {
+        _loggedInUserService = loggedInUserService;
+    }
+
+    public DbSet<Event> Events { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<EntityOne> EntityOne { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {	
+            modelBuilder.Entity<EntityOne>().HasData(new EntityOne
+            {
+                EntityOneId = 1,
+                Name = "One",
+                Price = 1.23M,
+                Description = "First Item",
+                TypeId = 1
+            });
+
+
+            modelBuilder.Entity<EntityOne>().HasData(new EntityOne
+            {
+                EntityOneId = 2,
+                Name = "Two",
+                Price = 1.24M,
+                Description = "Second Item",
+                TypeId = 2
+            });
+
+            modelBuilder.Entity<EntityOne>().HasData(new EntityOne
+            {
+                EntityOneId = 3,
+                Name = "Three",
+                Price = 1.25M,
+                Description = "Third Item",
+                TypeId = 2
+            });
+
+            modelBuilder.Entity<EntityOne>().HasData(new EntityOne
+            {
+                EntityOneId = 4,
+                Name = "Four",
+                Price = 1.26M,
+                Description = "Fourth Item",
+                TypeId = 4
+            });
+
+            modelBuilder.Entity<EntityOne>().HasData(new EntityOne
+            {
+                EntityOneId = 5,
+                Name = "Five",
+                Price = 1.27M,
+                Description = "Fifth Item",
+                TypeId = 4
+            });
+
+            modelBuilder.Entity<EntityOne>().HasData(new EntityOne
+            {
+                EntityOneId = 6,
+                Name = "Six",
+                Price = 1.28M,
+                Description = "Sixth Item",
+                TypeId = 4
+            });
+
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+            foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.CreatedDate = DateTime.Now;
+                        entry.Entity.CreatedBy = _loggedInUserService?.UserId;
+                        break;
+                    case EntityState.Modified:
+                        entry.Entity.LastModifiedDate = DateTime.Now;
+                        entry.Entity.LastModifiedBy = _loggedInUserService?.UserId;
+                        break;
+                }
+            }
+            return base.SaveChangesAsync(cancellationToken);
+        }
+}	
+
+Api Controllers
+
+namespace CompanyNameSpace.ProjectName.Api.Controllers
+{
+
+    [Route("api/[controller]")]
+    [ApiController]
+    public class EntityOneController : ControllerBase
+    {
+        private readonly IMediator _mediator;
+
+        public EntityOneController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+	
+	    [HttpGet(Name = "GetAllEntityOnes")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<List<EntityOneListVm>>> GetAllEntityOnes()
+        {
+            var dtos = await _mediator.Send(new GetEntityOneListQuery());
+            return Ok(dtos);
+        }
+	
+        [HttpGet("{id}", Name = "GetEntityOneById")]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<EntityOneDetailVm>> GetEntityOneById(int id)
+        {
+            var getEntityOneDetailQuery = new GetEntityOneDetailQuery() { Id = id };
+            return Ok(await _mediator.Send(getEntityOneDetailQuery));
+        }	
+
+        [HttpPost(Name = "AddEntityOne")]
+        public async Task<ActionResult<int>> Create([FromBody] CreateEntityOneCommand createEntityOneCommand)
+        {
+            var id = await _mediator.Send(createEntityOneCommand);
+            return Ok(id);
+        }		
+
+        [HttpPut(Name = "UpdateEntityOne")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> Update([FromBody] UpdateEntityOneCommand updateEntityOneCommand)
+        {
+            await _mediator.Send(updateEntityOneCommand);
+            return NoContent();
+        }		
+	}
+}
+
+        [HttpPost]
+        public async Task<IActionResult> Post([FromForm] List<IFormFile> files)
+        {
+            long size = files.Sum(f => f.Length);
+
+            var result = await _formFileConvertor.ConvertToFileData(files);
+
+            return Ok(new { count = files.Count, size });
+        }
+		
+using System.Text;
+
+namespace CompanyNameSpace.ProjectName.Api.Services
+{
+    public interface IFormFileConvertor
+    {
+        Task<IReadOnlyCollection<FileDataDto>> ConvertToFileData(List<IFormFile> files);
+    }
+
+    public class FormFileConvertor : IFormFileConvertor
+    {
+        public async Task<IReadOnlyCollection<FileDataDto>> ConvertToFileData(List<IFormFile> files)
+        {
+            var fileList = new List<FileDataDto>();
+            foreach (var formFile in files)
+            {
+                var fileDataSb = new StringBuilder();
+                using (var reader = new StreamReader(formFile.OpenReadStream()))
+                {
+                    while (reader.Peek() >= 0)
+                        fileDataSb.AppendLine(await reader.ReadLineAsync());
+                }
+
+                var fileData = new FileDataDto
+                {
+                    FileName = formFile.FileName,
+                    Length = formFile.Length,
+                    Name = formFile.Name,
+                    Data = fileDataSb.ToString()
+                };
+                fileList.Add(fileData);
+            }
+            return fileList;
+        }
+    }
+
+
+    //This type should be in the application contracts.
+    public class FileDataDto
+    {
+        public string Name { get; set; }
+        public long Length { get; set; }
+        public string FileName { get; set; }
+        public string Data { get; set; }
+
+    }
+
+    public class TestIFileForm
+    {
+        private IFormFile CreateTestFormFile(string fileName, string content)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(content);
+
+            return new FormFile(
+                baseStream: new MemoryStream(bytes),
+                baseStreamOffset: 0,
+                length: bytes.Length,
+                name: "Data",
+                fileName: fileName
+            );
+        }
+    }
+}
+		
