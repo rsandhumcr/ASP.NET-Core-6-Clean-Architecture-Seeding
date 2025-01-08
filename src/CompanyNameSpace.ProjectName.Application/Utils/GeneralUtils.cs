@@ -25,7 +25,12 @@ public class GeneralUtils
         var error = FormatException(ex);
         Debug.WriteLine(error);
     }
-
+    public static void ConsoleWriteLineException(Exception ex)
+    {
+        var error = FormatException(ex);
+        Console.WriteLine(error);
+    }
+    
     public static T? ConvertToObject<T>(string jsonData)
     {
         var options = new JsonSerializerOptions
@@ -43,6 +48,7 @@ public class GeneralUtils
         };
         return JsonSerializer.Serialize(objectItem, options);
     }
+
 
     public static List<T> ConvertJsonData<T>(List<string> dataList)
     {
