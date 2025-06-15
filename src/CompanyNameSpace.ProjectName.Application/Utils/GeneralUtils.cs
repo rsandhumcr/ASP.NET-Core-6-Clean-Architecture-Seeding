@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 
@@ -25,12 +26,13 @@ public class GeneralUtils
         var error = FormatException(ex);
         Debug.WriteLine(error);
     }
+
     public static void ConsoleWriteLineException(Exception ex)
     {
         var error = FormatException(ex);
         Console.WriteLine(error);
     }
-    
+
     public static T? ConvertToObject<T>(string jsonData)
     {
         var options = new JsonSerializerOptions
@@ -61,5 +63,43 @@ public class GeneralUtils
         }
 
         return listObjectData;
+    }
+
+    public static string GetFileFullPath(string fileName)
+    {
+        var executingPaths = GetAllDirectoryPaths(Assembly.GetExecutingAssembly().Location);
+        var pathOptions = new List<string>
+        {
+            string.Empty,
+            "bin\\Debug\\net8.0", "bin\\Release\\net8.0",
+            "/home/site/wwwroot",
+            "d:\\home\\site\\wwwroot"
+        };
+
+        pathOptions.AddRange(executingPaths);
+
+        foreach (var pathOption in pathOptions)
+        {
+            if (File.Exists(Path.Combine(pathOption, fileName)))
+            {
+                return Path.Combine(pathOption, fileName);
+            }
+        }
+        var allPaths = string.Join(',', pathOptions);
+        throw new FileNotFoundException($"{fileName} was not found in {allPaths}.");
+    }
+
+    private static List<string> GetAllDirectoryPaths(string pathLevel)
+    {
+        var pathOptions = new List<string>();
+        var currentPath = pathLevel;
+        while (!string.IsNullOrEmpty(currentPath) && (Directory.Exists(currentPath) || File.Exists(pathLevel)))
+        {
+            if (Directory.Exists(currentPath))
+                pathOptions.Add(currentPath);
+            currentPath = Directory.GetParent(currentPath)?.FullName;
+        }
+
+        return pathOptions;
     }
 }
