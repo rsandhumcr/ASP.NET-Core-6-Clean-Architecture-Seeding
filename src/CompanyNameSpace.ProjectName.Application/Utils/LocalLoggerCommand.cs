@@ -4,58 +4,74 @@ using System.Text.Json;
 namespace CompanyNameSpace.ProjectName.Application.Utils;
 public class LocalLoggerCommand
 {
-    private const string DefaultStringName = "UserAppException.log";
-    private readonly string _fileName;
-    private string _message;
+    private string FileName = "UserAppException.log";
+    private string message;
 
-    private LocalLoggerCommand(string fileName)
+    public LocalLoggerCommand()
     {
-        _fileName = fileName;
     }
 
-    public static LocalLoggerCommand NewMsg() => new LocalLoggerCommand(DefaultStringName);
-    
-    public static LocalLoggerCommand NewMsg(string filename) => new LocalLoggerCommand(filename);
-    
+    public LocalLoggerCommand(string fileName)
+    {
+        FileName = fileName;
+    }
+
+    public static LocalLoggerCommand NewMsg()
+    {
+        return new LocalLoggerCommand();
+    }
+
+    public static LocalLoggerCommand NewMsg(string filename)
+    {
+        return new LocalLoggerCommand(filename);
+    }
+
+
     public LocalLoggerCommand AddMessage(params string[] values)
     {
         var sb = new StringBuilder();
         foreach (var value in values)
             sb.Append(value);
-        _message += sb.ToString();
+        message += sb.ToString();
         return this;
     }
 
-    public LocalLoggerCommand AddMessageLines(params string[] values)
+    public LocalLoggerCommand AddMessageLine(params string[] values)
     {
         var sb = new StringBuilder();
         foreach (var value in values)
             sb.AppendLine(value);
-        _message += sb.ToString();
+        message += sb.ToString();
         return this;
     }
 
     public LocalLoggerCommand AddValueParameter(string parameterName, string dataValue)
     {
-        _message += "\n" + parameterName + ": " + dataValue;
+        message += parameterName + ": " + dataValue + "\n";
         return this;
     }
 
     public LocalLoggerCommand AddObjectParameter(string parameterName, Object obj)
     {
-        _message += parameterName +": " + ConvertToJson(obj);
+        message += parameterName + ": " + ConvertToJson(obj) + "\n";
         return this;
     }
 
     public LocalLoggerCommand AddException(Exception ex)
     {
-        _message += "\n" + FormatException(ex, 0);
+        message += "\n" + FormatException(ex, 0);
         return this;
     }
 
-    public void WriteToLog() => WriteStringToFile(_fileName, _message);
-    
-    public async Task WriteToLogAsync() => await WriteStringToFileAsync(_fileName, _message);
+    public void WriteToLog()
+    {
+        WriteStringToFile(FileName, message);
+    }
+
+    public async Task WriteToLogAsync()
+    {
+        await WriteStringToFileAsync(FileName, message);
+    }
 
     private string FormatException(Exception ex, int level = 0)
     {
@@ -80,7 +96,7 @@ public class LocalLoggerCommand
         else
             File.WriteAllText(fullPath, textData);
     }
-    
+
     private async Task WriteStringToFileAsync(string filename, string textData)
     {
         var fullPath = GetFullPath(filename);
@@ -90,15 +106,14 @@ public class LocalLoggerCommand
             await File.WriteAllTextAsync(fullPath, textData);
     }
 
-    private static string GetFullPath(string filename) => Path.Combine(Path.GetTempPath(), filename);
+    private static string GetFullPath(string filename)
+    {
+        return Path.Combine(Path.GetTempPath(), filename);
+    }
 
     private string ConvertToJson(object objectItem)
     {
-        var options = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        };
-        return JsonSerializer.Serialize(objectItem, options);
+        return JsonSerializer.Serialize(objectItem);
     }
 }
 
