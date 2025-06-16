@@ -1,8 +1,17 @@
 ﻿using System.Text;
 
 namespace CompanyNameSpace.ProjectName.Application.Utils;
+
 public class LocalLogger
 {
+    private const string DefaultFileName = "UserAppException.log";
+
+    public static void MessageLogger(string message, string filename)
+    {
+        var wholeMessage = CreateMessageHeader(message, string.Empty);
+        WriteStringToFile(filename, wholeMessage);
+    }
+
     public static void ExceptionLogger(Exception ex, string message, string filename)
     {
         var exceptionMessage = FormatException(ex);
@@ -10,10 +19,10 @@ public class LocalLogger
         WriteStringToFile(filename, wholeMessage);
     }
 
-    public static void MessageLogger(string message, string filename)
+    public static async Task MessageLoggerAsync(string message, string filename)
     {
         var wholeMessage = CreateMessageHeader(message, string.Empty);
-        WriteStringToFile(filename, wholeMessage);
+        await WriteStringToFileAsync(filename, wholeMessage);
     }
 
     public static async Task ExceptionLoggerAsync(Exception ex, string message, string filename)
@@ -23,18 +32,19 @@ public class LocalLogger
         await WriteStringToFileAsync(filename, wholeMessage);
     }
 
-
-    public static async Task MessageLoggerAsync(string message, string filename)
+    public static string CreateLineMsg(params string[] values)
     {
-        var wholeMessage = CreateMessageHeader(message, string.Empty);
-        await WriteStringToFileAsync(filename, wholeMessage);
+        var sb = new StringBuilder();
+        foreach (var value in values)
+            sb.Append(value);
+        return sb.ToString();
     }
 
     private static string CreateMessageHeader(string message01, string message02)
     {
         var now = DateTime.Now;
         var sb = new StringBuilder($"--- {now:yyyy-MM-dd HH:mm:ss}\n");
-        sb.AppendLine($"msg : {message01}");
+        sb.AppendLine($"Message : {message01}");
         if (!string.IsNullOrWhiteSpace(message02))
             sb.AppendLine(message02);
         return sb.ToString();
@@ -45,7 +55,6 @@ public class LocalLogger
         if (ex == null)
             return string.Empty;
         var sb = new StringBuilder();
-        sb.AppendLine(string.Empty);
         sb.AppendLine($"level {level}");
         sb.AppendLine("==========");
         sb.AppendLine($"Message: {ex.Message}");
@@ -77,21 +86,7 @@ public class LocalLogger
     private static string GetFullPath(string filename)
     {
         if (string.IsNullOrEmpty(filename))
-            filename = "UserAppExceptionLog.txt";
+            filename = DefaultFileName;
         return Path.Combine(Path.GetTempPath(), filename);
-    }
-
-    public static void ExceptionLogger(Exception ex, string parameterData, string message, string filename)
-    {
-        var exceptionMessage = FormatException(ex);
-        var wholeMessage = CreateMessageHeader(message + "\n" + parameterData, exceptionMessage);
-        WriteStringToFile(filename, wholeMessage);
-    }
-
-    public static async Task ExceptionLoggerAsync(Exception ex, string parameterData, string message, string filename)
-    {
-        var exceptionMessage = FormatException(ex);
-        var wholeMessage = CreateMessageHeader(message + "\n" + parameterData, exceptionMessage);
-        await WriteStringToFileAsync(filename, wholeMessage);
     }
 }
